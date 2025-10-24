@@ -8,7 +8,7 @@ public class DnsResponse {
   public byte[] compile(byte[] query) {
     byte[] packetIdentifier = ByteBuffer
         .allocate(PACKET_IDENTIFIER_SIZE)
-        .putInt(1234)
+        .putShort((short) 1234)
         .array();
     byte queryIndicator = (byte) (1<<7);
 
