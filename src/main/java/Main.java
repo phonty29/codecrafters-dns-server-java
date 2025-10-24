@@ -17,9 +17,7 @@ public class Main {
          serverSocket.receive(packet);
          System.out.println("Received data");
 
-         final byte[] response = new DnsResponse().compile(packet.getData());
-
-
+         final byte[] response = new DnsResponse().response(packet.getData());
          final DatagramPacket packetResponse = new DatagramPacket(response, response.length, packet.getSocketAddress());
          // Send datagram packet
          serverSocket.send(packetResponse);
