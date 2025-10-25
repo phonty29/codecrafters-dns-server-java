@@ -22,8 +22,6 @@ public class Main {
          final byte[] response = DnsResponse
              .builder()
              .query(packet.getData())
-             .buildHeader()
-             .buildQuestion()
              .build()
              .array();
          final DatagramPacket packetResponse = new DatagramPacket(response, response.length, packet.getSocketAddress());

@@ -25,7 +25,7 @@ public class DnsResponseBuilder {
     return this;
   }
 
-  public DnsResponseBuilder buildHeader() {
+  public void buildHeader() {
     this.messageBuffer.put(
         this.dnsHeaderBuilder
             .transactionId((short) RANDOM_TRANSACTION_ID)
@@ -36,19 +36,19 @@ public class DnsResponseBuilder {
             .arCount((short) 0)
             .build()
     );
-    return this;
   }
 
-  public DnsResponseBuilder buildQuestion() {
+  public void buildQuestion() {
     this.messageBuffer.put(
         this.dnsQuestionBuilder
             .questions(questions)
             .build()
     );
-    return this;
   }
 
   public DnsResponse build() {
+    buildHeader();
+    buildQuestion();
     return new DnsResponse(this.messageBuffer);
   }
 }
