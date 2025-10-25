@@ -24,8 +24,8 @@ class DnsHeaderBuilder {
   protected DnsHeaderBuilder flags(boolean isReply) {
     final BitSet flags = new BitSet(16);
     // QR (Query/Response) flag - bit 15
-    flags.set(0, isReply);
-    this.headerBuffer.put(flags.toByteArray());
+    flags.set(15, isReply);
+    this.headerBuffer.put(ByteManipulation.toBigEndian(flags.toByteArray()));
     return this;
   }
 
