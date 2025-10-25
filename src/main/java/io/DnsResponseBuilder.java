@@ -42,6 +42,7 @@ public class DnsResponseBuilder {
     String[] domainParts = name.split("\\.");
     String secondLevelDomainName = domainParts[0];
     String topLevelDomainName = domainParts[1];
+    System.out.println(secondLevelDomainName + topLevelDomainName);
     byte terminator = 0;
     byte lengthOfSld = (byte) secondLevelDomainName.length();
     byte lengthOfTld = (byte) topLevelDomainName.length();
