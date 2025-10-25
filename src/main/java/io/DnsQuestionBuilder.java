@@ -1,5 +1,8 @@
 package io;
 
+import static consts.QuestionClass.IN;
+import static consts.QuestionType.A;
+
 import java.nio.ByteBuffer;
 import java.nio.charset.StandardCharsets;
 
@@ -32,8 +35,8 @@ class DnsQuestionBuilder {
         .put(topLevelDomainName.getBytes())
         .put(terminator);
     // Type
-    this.questionBuffer.putShort((short) 1);
+    this.questionBuffer.putShort(A.value());
     // Class
-    this.questionBuffer.putShort((short) 1);
+    this.questionBuffer.putShort(IN.value());
   }
 }
