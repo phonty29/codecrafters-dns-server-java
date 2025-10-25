@@ -26,7 +26,6 @@ public class Main {
              .buildQuestion("codecrafters.io")
              .build()
              .array();
-         System.out.println(response.length);
          final DatagramPacket packetResponse = new DatagramPacket(response, response.length, packet.getSocketAddress());
          // Send datagram packet
          serverSocket.send(packetResponse);

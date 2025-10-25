@@ -6,7 +6,6 @@ import java.util.BitSet;
 
 class DnsHeaderBuilder {
   private final ByteBuffer headerBuffer;
-  private final BitSet flags = new BitSet(16);
 
   private final static int HEADER_SIZE = 12;
 
@@ -23,9 +22,10 @@ class DnsHeaderBuilder {
 
   protected DnsHeaderBuilder flags(boolean isReply) {
     // QR (Query/Response) flag - bit 7
+    final BitSet flags = new BitSet(7);
     flags.set(7, isReply);
-
-    this.headerBuffer.put(flags.toByteArray());
+    this.headerBuffer.put(flags.toByteArray()[0]);
+    this.headerBuffer.put((byte) 0);
     return this;
   }
 
