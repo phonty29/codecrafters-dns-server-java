@@ -14,11 +14,8 @@ class DnsQuestionBuilder {
   }
 
   public ByteBuffer build() {
-    questionBuffer.flip();
-    int filledBytes = questionBuffer.remaining();
-    var resp = questionBuffer.get(new byte[filledBytes]);
-    System.out.println("build: " + resp.array().length);
-    return resp;
+    int cursor = questionBuffer.position();
+    return questionBuffer.position(0).limit(cursor).slice();
   }
 
   private void setQuestion(String name) {
