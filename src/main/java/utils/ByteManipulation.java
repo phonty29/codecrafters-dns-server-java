@@ -6,6 +6,6 @@ import java.nio.ByteOrder;
 public class ByteManipulation {
   public static byte[] toBigEndian(byte[] arr) {
     var buff = ByteBuffer.wrap(arr);
-    return buff.order(ByteOrder.BIG_ENDIAN).array();
+    return buff.array();
   }
 }
