@@ -3,6 +3,7 @@ package io;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.util.BitSet;
+import utils.ByteManipulation;
 
 class DnsHeaderBuilder {
   private final ByteBuffer headerBuffer;
@@ -16,16 +17,16 @@ class DnsHeaderBuilder {
   }
 
   protected DnsHeaderBuilder transactionId(short transactionId) {
-    headerBuffer.putShort(transactionId);
+    this.headerBuffer.putShort(transactionId);
     return this;
   }
 
   protected DnsHeaderBuilder flags(boolean isReply) {
-    // QR (Query/Response) flag - bit 7
-    final BitSet flags = new BitSet(7);
-    flags.set(7, isReply);
-    this.headerBuffer.put(flags.toByteArray()[0]);
-    this.headerBuffer.put((byte) 0);
+    final BitSet flags = new BitSet(16);
+    // QR (Query/Response) flag - bit 15
+    flags.set(15, isReply);
+
+    this.headerBuffer.put(ByteManipulation.toLittleEndian(flags.toByteArray()));
     return this;
   }
 
