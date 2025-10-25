@@ -6,18 +6,18 @@ import java.nio.charset.StandardCharsets;
 
 public class DnsResponseBuilder {
   private final ByteBuffer messageBuffer;
-  private final DnsHeaderBuilder dnsHeaderBuilder;
+  private final DnsHeaderBuilder dnsHeaderBuilder = new DnsHeaderBuilder();
+  private final DnsQuestionBuilder dnsQuestionBuilder = new DnsQuestionBuilder();
   private ByteBuffer queryBuffer;
 
   private final static int MAX_DNS_PACKET_SIZE = 512;
   private final static int RANDOM_TRANSACTION_ID = 1234;
+  private final static String[] questions = {"codecrafters.io"};
 
   public DnsResponseBuilder() {
     this.messageBuffer = ByteBuffer
         .allocate(MAX_DNS_PACKET_SIZE)
         .order(ByteOrder.BIG_ENDIAN);
-
-    this.dnsHeaderBuilder = new DnsHeaderBuilder();
   }
 
   public DnsResponseBuilder query(byte[] query) {
@@ -28,35 +28,23 @@ public class DnsResponseBuilder {
   public DnsResponseBuilder buildHeader() {
     this.messageBuffer.put(
         this.dnsHeaderBuilder
-        .transactionId((short) RANDOM_TRANSACTION_ID)
-        .flags(true)
-        .qdCount((short) 1)
-        .anCount((short) 0)
-        .nsCount((short) 0)
-        .arCount((short) 0)
-        .build()
+            .transactionId((short) RANDOM_TRANSACTION_ID)
+            .flags(true)
+            .qdCount((short) questions.length)
+            .anCount((short) 0)
+            .nsCount((short) 0)
+            .arCount((short) 0)
+            .build()
     );
     return this;
   }
 
-  public DnsResponseBuilder buildQuestion(String name) {
-    String[] domainParts = name.split("\\.");
-    String secondLevelDomainName = domainParts[0];
-    String topLevelDomainName = domainParts[1];
-    byte terminator = 0;
-
-    // Name
-    this.messageBuffer
-        .put((byte) secondLevelDomainName.length())
-        .put(secondLevelDomainName.getBytes(StandardCharsets.UTF_8))
-        .put((byte) topLevelDomainName.length())
-        .put(topLevelDomainName.getBytes())
-        .put(terminator);
-    // Type
-    this.messageBuffer.putShort((short) 1);
-    // Class
-    this.messageBuffer.putShort((short) 1);
-
+  public DnsResponseBuilder buildQuestion() {
+    this.messageBuffer.put(
+        this.dnsQuestionBuilder
+            .questions(questions)
+            .build()
+    );
     return this;
   }
 

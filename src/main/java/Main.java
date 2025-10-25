@@ -23,7 +23,7 @@ public class Main {
              .builder()
              .query(packet.getData())
              .buildHeader()
-             .buildQuestion("codecrafters.io")
+             .buildQuestion()
              .build()
              .array();
          final DatagramPacket packetResponse = new DatagramPacket(response, response.length, packet.getSocketAddress());

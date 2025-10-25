@@ -10,7 +10,7 @@ class DnsHeaderBuilder {
 
   private final static int HEADER_SIZE = 12;
 
-  public DnsHeaderBuilder() {
+  DnsHeaderBuilder() {
     this.headerBuffer = ByteBuffer
         .allocate(HEADER_SIZE)
         .order(ByteOrder.BIG_ENDIAN);
@@ -24,8 +24,9 @@ class DnsHeaderBuilder {
   protected DnsHeaderBuilder flags(boolean isReply) {
     final BitSet flags = new BitSet(16);
     // QR (Query/Response) flag - bit 15
-    flags.set(1, isReply);
-//    this.headerBuffer.put(ByteManipulation.toBigEndian(flags.toByteArray()));
+    flags.set(15, isReply);
+
+    this.headerBuffer.put(ByteManipulation.toBigEndian(flags.toByteArray()));
     return this;
   }
 

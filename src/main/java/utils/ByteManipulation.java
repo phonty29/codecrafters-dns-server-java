@@ -5,7 +5,6 @@ import java.nio.ByteOrder;
 
 public class ByteManipulation {
   public static byte[] toBigEndian(byte[] littleEndianBytes) {
-    // If the BitSet is empty, return an empty array
     if (littleEndianBytes.length == 0) {
       return new byte[0];
     }
