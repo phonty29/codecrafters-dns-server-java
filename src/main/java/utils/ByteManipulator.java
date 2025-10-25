@@ -1,9 +1,6 @@
 package utils;
 
-import java.nio.ByteBuffer;
-import java.nio.ByteOrder;
-
-public class ByteManipulation {
+public class ByteManipulator {
   public static byte[] toBigEndian(byte[] littleEndianBytes) {
     if (littleEndianBytes.length == 0) {
       return new byte[0];

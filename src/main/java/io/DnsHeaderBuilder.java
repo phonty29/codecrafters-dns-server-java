@@ -3,7 +3,7 @@ package io;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.util.BitSet;
-import utils.ByteManipulation;
+import utils.ByteManipulator;
 
 class DnsHeaderBuilder {
   private final ByteBuffer headerBuffer;
@@ -26,7 +26,7 @@ class DnsHeaderBuilder {
     // QR (Query/Response) flag - bit 15
     flags.set(15, isReply);
 
-    this.headerBuffer.put(ByteManipulation.toBigEndian(flags.toByteArray()));
+    this.headerBuffer.put(ByteManipulator.toBigEndian(flags.toByteArray()));
     return this;
   }
 
