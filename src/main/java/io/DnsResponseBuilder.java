@@ -54,7 +54,7 @@ public class DnsResponseBuilder {
         .put(topLevelDomainName.getBytes())
         .put(terminator);
     // Type
-    this.messageBuffer.putChar('A');
+    this.messageBuffer.putShort((short) 1);
     // Class
     this.messageBuffer.putShort((short) 1);
 
