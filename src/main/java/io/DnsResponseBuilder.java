@@ -2,6 +2,7 @@ package io;
 
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
+import java.nio.charset.StandardCharsets;
 
 public class DnsResponseBuilder {
   private final ByteBuffer messageBuffer;
@@ -44,14 +45,12 @@ public class DnsResponseBuilder {
     String topLevelDomainName = domainParts[1];
     System.out.println(secondLevelDomainName + topLevelDomainName);
     byte terminator = 0;
-    byte lengthOfSld = (byte) secondLevelDomainName.length();
-    byte lengthOfTld = (byte) topLevelDomainName.length();
 
     // Name
     this.messageBuffer
-        .put(lengthOfSld)
-        .put(secondLevelDomainName.getBytes())
-        .put(lengthOfTld)
+        .put((byte) secondLevelDomainName.length())
+        .put(secondLevelDomainName.getBytes(StandardCharsets.UTF_8))
+        .put((byte) topLevelDomainName.length())
         .put(topLevelDomainName.getBytes())
         .put(terminator);
     // Type
