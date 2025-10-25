@@ -2,6 +2,8 @@ import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 
+import io.DnsResponse;
+
 public class Main {
   public static void main(String[] args){
     System.out.println("Logs from your program will appear here!");
@@ -17,7 +19,13 @@ public class Main {
          serverSocket.receive(packet);
          System.out.println("Received data");
 
-         final byte[] response = new DnsResponse().response(packet.getData());
+         final byte[] response = DnsResponse
+             .builder()
+             .query(packet.getData())
+             .buildHeader()
+             .buildQuestion("codecrafters.com")
+             .build()
+             .array();
          final DatagramPacket packetResponse = new DatagramPacket(response, response.length, packet.getSocketAddress());
          // Send datagram packet
          serverSocket.send(packetResponse);
