@@ -25,8 +25,16 @@ class DnsHeaderBuilder {
     final BitSet flags = new BitSet(16);
     // QR (Query/Response) flag - bit 15
     flags.set(15, isReply);
+    byte[] littleEndian = flags.toByteArray();
+    // Ensure array has at least 2 bytes
+    byte high = littleEndian.length > 1 ? littleEndian[1] : 0;
+    byte low  = littleEndian.length > 0 ? littleEndian[0] : 0;
 
-    this.headerBuffer.put(ByteManipulation.toLittleEndian(flags.toByteArray()));
+    // Write in big-endian (network) order
+    this.headerBuffer.put(high);
+    this.headerBuffer.put(low);
+
+//    this.headerBuffer.put(ByteManipulation.toLittleEndian(flags.toByteArray()));
     return this;
   }
 
