@@ -36,6 +36,6 @@ class DnsQuestionBuilder {
     this.questionBuffer.putShort((short) 1);
     // Class
     this.questionBuffer.putShort((short) 1);
-    System.out.println(questionBuffer.position());
+    System.out.println("Position: " + questionBuffer.position());
   }
 }
