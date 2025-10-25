@@ -53,7 +53,7 @@ class DnsHeaderBuilder {
     return this;
   }
 
-  protected ByteBuffer build() {
-    return headerBuffer.asReadOnlyBuffer();
+  protected byte[] build() {
+    return this.headerBuffer.array();
   }
 }
