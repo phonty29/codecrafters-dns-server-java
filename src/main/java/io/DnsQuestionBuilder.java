@@ -16,7 +16,6 @@ class DnsQuestionBuilder {
   public ByteBuffer build() {
     questionBuffer.flip();
     int filledBytes = questionBuffer.remaining();
-    System.out.println(filledBytes);
     return questionBuffer.get(new byte[filledBytes]);
   }
 
@@ -37,5 +36,6 @@ class DnsQuestionBuilder {
     this.questionBuffer.putShort((short) 1);
     // Class
     this.questionBuffer.putShort((short) 1);
+    System.out.println(questionBuffer.position());
   }
 }
