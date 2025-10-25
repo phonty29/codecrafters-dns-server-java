@@ -22,8 +22,8 @@ class DnsHeaderBuilder {
   }
 
   protected DnsHeaderBuilder flags(boolean isReply) {
-    // QR (Query/Response) flag - bit 15
-    flags.set(15, isReply);
+    // QR (Query/Response) flag - bit 7
+    flags.set(7, isReply);
 
     this.headerBuffer.put(flags.toByteArray());
     return this;
