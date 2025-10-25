@@ -16,6 +16,7 @@ class DnsQuestionBuilder {
   public ByteBuffer build() {
     questionBuffer.flip();
     int filledBytes = questionBuffer.remaining();
+    System.out.println(filledBytes);
     return questionBuffer.get(new byte[filledBytes]);
   }
 
