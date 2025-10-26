@@ -42,6 +42,7 @@ public class DnsResponseBuilder {
   public DnsResponse build() {
     buildHeader();
     buildQuestion();
+    buildAnswers();
     return new DnsResponse(this.messageBuffer);
   }
 }
