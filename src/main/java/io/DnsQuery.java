@@ -2,7 +2,7 @@ package io;
 
 import java.nio.ByteBuffer;
 
-class DnsQuery implements BufferWrapper {
+public class DnsQuery implements BufferWrapper {
   private final ByteBuffer queryBuffer;
   private final DnsHeader header;
 

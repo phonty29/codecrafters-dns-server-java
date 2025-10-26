@@ -55,6 +55,8 @@ public class DnsResponseBuilder implements Builder<DnsResponse> {
         .put(header())
         .put(question())
         .put(answer())
+        .duplicate()
+        .position(0)
     );
   }
 }

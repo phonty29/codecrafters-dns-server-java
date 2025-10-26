@@ -60,6 +60,6 @@ class DnsHeaderBuilder implements Builder<DnsHeader> {
 
   @Override
   public DnsHeader build() {
-    return new DnsHeader(this.headerBuffer.position(0).duplicate());
+    return new DnsHeader(this.headerBuffer.duplicate().position(0));
   }
 }
