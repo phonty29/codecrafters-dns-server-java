@@ -3,8 +3,6 @@ package io;
 import io.DnsHeader.Flags;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
-import java.util.BitSet;
-import utils.ByteManipulator;
 
 class DnsHeaderBuilder implements Builder<DnsHeader> {
 
@@ -62,6 +60,6 @@ class DnsHeaderBuilder implements Builder<DnsHeader> {
 
   @Override
   public DnsHeader build() {
-    return new DnsHeader(this.headerBuffer);
+    return new DnsHeader(this.headerBuffer.position(0).duplicate());
   }
 }
