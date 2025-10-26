@@ -6,7 +6,7 @@ class DnsQuestion implements BufferWrapper {
   private final ByteBuffer questionBuffer;
 
   DnsQuestion(ByteBuffer questionBuffer) {
-    this.questionBuffer = questionBuffer;
+    this.questionBuffer = questionBuffer.duplicate();
   }
 
   public ByteBuffer getBuffer() {

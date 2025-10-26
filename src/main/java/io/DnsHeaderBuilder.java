@@ -1,5 +1,6 @@
 package io;
 
+import io.DnsHeader.Flags;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.util.BitSet;
@@ -22,12 +23,16 @@ class DnsHeaderBuilder implements Builder<DnsHeader> {
     return this;
   }
 
-  protected DnsHeaderBuilder flags(boolean isReply) {
-    final BitSet flags = new BitSet(16);
-    // QR (Query/Response) flag - bit 15
-    flags.set(15, isReply);
+  protected DnsHeaderBuilder flags(Flags queryFlags) {
+    short flags = 0;
+    flags |= 1 << 15; // QR bit
+    flags |= queryFlags.getOpcode() << 11;
+    flags |= queryFlags.isRD() ? 1 << 8 : 0;
+    if (queryFlags.getOpcode() != 0) {
+      flags |= 4;
+    }
 
-    this.headerBuffer.put(ByteManipulator.toBigEndian(flags.toByteArray()));
+    this.headerBuffer.putShort(flags);
     return this;
   }
 

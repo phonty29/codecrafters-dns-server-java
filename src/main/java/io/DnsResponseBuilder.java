@@ -6,10 +6,9 @@ import java.nio.ByteOrder;
 public class DnsResponseBuilder implements Builder<DnsResponse> {
 
   private final ByteBuffer messageBuffer;
-  private ByteBuffer queryBuffer;
+  private DnsQuery query;
 
   private final static int MAX_DNS_PACKET_SIZE = 512;
-  private final static int RANDOM_TRANSACTION_ID = 1234;
   private final static String[] questions = {"codecrafters.io"};
   private final static String[] resourceRecords = {"codecrafters.io"};
 
@@ -18,14 +17,16 @@ public class DnsResponseBuilder implements Builder<DnsResponse> {
   }
 
   public DnsResponseBuilder query(byte[] query) {
-    this.queryBuffer = ByteBuffer.wrap(query);
+    this.query = DnsQuery
+        .builder(query)
+        .build();
     return this;
   }
 
   private ByteBuffer header() {
     return new DnsHeaderBuilder()
-        .transactionId((short) RANDOM_TRANSACTION_ID)
-        .flags(true)
+        .transactionId(this.query.getHeader().getPacketID())
+        .flags(this.query.getHeader().getFlags())
         .qdCount((short) questions.length)
         .anCount((short) resourceRecords.length)
         .nsCount((short) 0)

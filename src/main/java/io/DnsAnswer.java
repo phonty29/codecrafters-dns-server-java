@@ -6,7 +6,7 @@ class DnsAnswer implements BufferWrapper {
   private final ByteBuffer answerBuffer;
 
   DnsAnswer(ByteBuffer answerBuffer) {
-    this.answerBuffer = answerBuffer;
+    this.answerBuffer = answerBuffer.duplicate();
   }
 
   @Override

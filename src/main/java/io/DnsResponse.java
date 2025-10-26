@@ -7,7 +7,7 @@ public class DnsResponse implements BufferWrapper {
   private final ByteBuffer responseBuffer;
 
   public DnsResponse(ByteBuffer responseBuffer) {
-    this.responseBuffer = responseBuffer;
+    this.responseBuffer = responseBuffer.duplicate();
   }
 
   public static DnsResponseBuilder builder() {

@@ -23,7 +23,7 @@ class DnsQuestionBuilder implements Builder<DnsQuestion> {
   @Override
   public DnsQuestion build() {
     int cursor = questionBuffer.position();
-    return new DnsQuestion(questionBuffer.position(0).limit(cursor).slice());
+    return new DnsQuestion(questionBuffer.duplicate().position(0).limit(cursor).slice());
   }
 
   private void setQuestion(String name) {

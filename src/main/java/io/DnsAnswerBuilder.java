@@ -27,7 +27,7 @@ class DnsAnswerBuilder implements Builder<DnsAnswer> {
   @Override
   public DnsAnswer build() {
     int cursor = answerBuffer.position();
-    return new DnsAnswer(answerBuffer.position(0).limit(cursor).slice());
+    return new DnsAnswer(answerBuffer.duplicate().position(0).limit(cursor).slice());
   }
 
   private void setResourceRecord(String name) {
