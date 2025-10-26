@@ -3,6 +3,7 @@ package io;
 import java.nio.ByteBuffer;
 
 public class DnsResponse {
+
   private final ByteBuffer responseBuffer;
 
   public DnsResponse(ByteBuffer responseBuffer) {

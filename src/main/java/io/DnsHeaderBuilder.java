@@ -6,6 +6,7 @@ import java.util.BitSet;
 import utils.ByteManipulator;
 
 class DnsHeaderBuilder {
+
   private final ByteBuffer headerBuffer;
 
   private final static int HEADER_SIZE = 12;

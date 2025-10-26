@@ -1,6 +1,7 @@
 package utils;
 
 public class ByteManipulator {
+
   public static byte[] toBigEndian(byte[] littleEndianBytes) {
     if (littleEndianBytes.length == 0) {
       return new byte[0];

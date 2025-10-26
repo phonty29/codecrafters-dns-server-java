@@ -7,16 +7,20 @@ import java.nio.ByteBuffer;
 import java.nio.charset.StandardCharsets;
 
 class DnsQuestionBuilder {
-  private final ByteBuffer questionBuffer = ByteBuffer.allocate(500);
+  private final ByteBuffer questionBuffer;
 
-  public DnsQuestionBuilder questions(String[] questions) {
+  DnsQuestionBuilder(int size) {
+    this.questionBuffer = ByteBuffer.allocate(size);
+  }
+
+  DnsQuestionBuilder questions(String[] questions) {
     for (var question : questions) {
       this.setQuestion(question);
     }
     return this;
   }
 
-  public ByteBuffer build() {
+  ByteBuffer build() {
     int cursor = questionBuffer.position();
     return questionBuffer.position(0).limit(cursor).slice();
   }
