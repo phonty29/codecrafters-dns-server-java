@@ -7,7 +7,7 @@ import java.net.Inet4Address;
 import java.nio.ByteBuffer;
 import java.nio.charset.StandardCharsets;
 
-class DnsAnswerBuilder {
+class DnsAnswerBuilder implements Builder<DnsAnswer> {
   private final ByteBuffer answerBuffer;
 
   private final static int TTL = 60;
@@ -24,9 +24,10 @@ class DnsAnswerBuilder {
     return this;
   }
 
-  protected ByteBuffer build() {
+  @Override
+  public DnsAnswer build() {
     int cursor = answerBuffer.position();
-    return answerBuffer.position(0).limit(cursor).slice();
+    return new DnsAnswer(answerBuffer.position(0).limit(cursor).slice());
   }
 
   private void setResourceRecord(String name) {

@@ -6,7 +6,7 @@ import static consts.QuestionType.A;
 import java.nio.ByteBuffer;
 import java.nio.charset.StandardCharsets;
 
-class DnsQuestionBuilder {
+class DnsQuestionBuilder implements Builder<DnsQuestion> {
   private final ByteBuffer questionBuffer;
 
   DnsQuestionBuilder(int size) {
@@ -20,9 +20,10 @@ class DnsQuestionBuilder {
     return this;
   }
 
-  ByteBuffer build() {
+  @Override
+  public DnsQuestion build() {
     int cursor = questionBuffer.position();
-    return questionBuffer.position(0).limit(cursor).slice();
+    return new DnsQuestion(questionBuffer.position(0).limit(cursor).slice());
   }
 
   private void setQuestion(String name) {

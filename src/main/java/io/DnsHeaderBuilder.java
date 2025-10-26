@@ -5,7 +5,7 @@ import java.nio.ByteOrder;
 import java.util.BitSet;
 import utils.ByteManipulator;
 
-class DnsHeaderBuilder {
+class DnsHeaderBuilder implements Builder<DnsHeader> {
 
   private final ByteBuffer headerBuffer;
 
@@ -55,7 +55,8 @@ class DnsHeaderBuilder {
     return this;
   }
 
-  protected byte[] build() {
-    return this.headerBuffer.array();
+  @Override
+  public DnsHeader build() {
+    return new DnsHeader(this.headerBuffer);
   }
 }

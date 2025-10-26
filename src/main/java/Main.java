@@ -24,7 +24,7 @@ public class Main {
             .builder()
             .query(packet.getData())
             .build()
-            .array();
+            .getBytes();
         final DatagramPacket packetResponse = new DatagramPacket(response, response.length,
             packet.getSocketAddress());
         // Send datagram packet

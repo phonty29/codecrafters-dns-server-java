@@ -2,7 +2,7 @@ package io;
 
 import java.nio.ByteBuffer;
 
-public class DnsResponse {
+public class DnsResponse implements BufferWrapper {
 
   private final ByteBuffer responseBuffer;
 
@@ -14,7 +14,11 @@ public class DnsResponse {
     return new DnsResponseBuilder();
   }
 
-  public byte[] array() {
+  public ByteBuffer getBuffer() {
+    return this.responseBuffer;
+  }
+
+  public byte[] getBytes() {
     return this.responseBuffer.array();
   }
 }
