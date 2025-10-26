@@ -23,9 +23,9 @@ class DnsHeaderBuilder implements Builder<DnsHeader> {
 
   protected DnsHeaderBuilder flags(Flags queryFlags) {
     short flags = 0;
-    flags |= 1 << 15; // QR bit
-    flags |= queryFlags.getOpcode() << 11;
-    flags |= queryFlags.isRD() ? 1 << 8 : 0;
+    flags |= (short) (1 << 15); // QR bit
+    flags |= (short) (queryFlags.getOpcode() << 11);
+    flags |= (short) (queryFlags.isRD() ? 1 << 8 : 0);
     if (queryFlags.getOpcode() != 0) {
       flags |= 4;
     }
