@@ -28,7 +28,7 @@ class DnsHeader implements BufferWrapper {
   }
 
   public Flags getFlags() {
-    return new Flags(this.headerBuffer.getShort(1));
+    return new Flags(this.headerBuffer.getShort(2));
   }
 
   public static class Flags {
