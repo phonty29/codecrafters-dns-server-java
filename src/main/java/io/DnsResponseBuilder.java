@@ -22,43 +22,38 @@ public class DnsResponseBuilder implements Builder<DnsResponse> {
     return this;
   }
 
-  private void buildHeader() {
-    this.messageBuffer.put(
-        new DnsHeaderBuilder()
-            .transactionId((short) RANDOM_TRANSACTION_ID)
-            .flags(true)
-            .qdCount((short) questions.length)
-            .anCount((short) resourceRecords.length)
-            .nsCount((short) 0)
-            .arCount((short) 0)
-            .build()
-            .getBuffer()
-    );
+  private ByteBuffer header() {
+    return new DnsHeaderBuilder()
+        .transactionId((short) RANDOM_TRANSACTION_ID)
+        .flags(true)
+        .qdCount((short) questions.length)
+        .anCount((short) resourceRecords.length)
+        .nsCount((short) 0)
+        .arCount((short) 0)
+        .build()
+        .getBuffer();
   }
 
-  private void buildQuestion() {
-    this.messageBuffer.put(
-        new DnsQuestionBuilder(this.messageBuffer.remaining())
-            .questions(questions)
-            .build()
-            .getBuffer()
-    );
+  private ByteBuffer question() {
+    return new DnsQuestionBuilder(this.messageBuffer.remaining())
+        .questions(questions)
+        .build()
+        .getBuffer();
   }
 
-  private void buildAnswers() {
-    this.messageBuffer.put(
-        new DnsAnswerBuilder(this.messageBuffer.remaining())
-            .answers(resourceRecords)
-            .build()
-            .getBuffer()
-    );
+  private ByteBuffer answer() {
+    return new DnsAnswerBuilder(this.messageBuffer.remaining())
+        .answers(resourceRecords)
+        .build()
+        .getBuffer();
   }
 
   @Override
   public DnsResponse build() {
-    buildHeader();
-    buildQuestion();
-    buildAnswers();
-    return new DnsResponse(this.messageBuffer);
+    return new DnsResponse(this.messageBuffer
+        .put(header())
+        .put(question())
+        .put(answer())
+    );
   }
 }
