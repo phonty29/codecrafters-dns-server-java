@@ -9,6 +9,8 @@ class DnsHeaderBuilder implements Builder<DnsHeader> {
   private final ByteBuffer headerBuffer;
 
   private final static int HEADER_SIZE = 12;
+  private final static byte NO_ERROR = 0;
+  private final static byte NOT_IMPLEMENTED = 4;
 
   DnsHeaderBuilder() {
     this.headerBuffer = ByteBuffer
@@ -21,16 +23,22 @@ class DnsHeaderBuilder implements Builder<DnsHeader> {
     return this;
   }
 
+  /**
+   * @param queryFlags flags from DNS query
+   * @return this
+   */
   protected DnsHeaderBuilder flags(Flags queryFlags) {
-    short flags = 0;
-    flags |= (short) (1 << 15); // QR bit
-    flags |= (short) (queryFlags.getOpcode() << 11);
-    flags |= (short) (queryFlags.isRD() ? 1 << 8 : 0);
+    Flags responseFlags = new Flags((short) 0);
+    responseFlags.setQueryResponseIndicator(true);
+    responseFlags.setOpcode(queryFlags.getOpcode());
+    responseFlags.setRecursionDesired(queryFlags.isRecursionDesired());
+    responseFlags.setRecursionDesired(queryFlags.isRecursionDesired());
     if (queryFlags.getOpcode() != 0) {
-      flags |= 4;
+      responseFlags.setResponseCode(NOT_IMPLEMENTED);
+    } else {
+      responseFlags.setResponseCode(NO_ERROR);
     }
-
-    this.headerBuffer.putShort(flags);
+    this.headerBuffer.putShort(responseFlags.value());
     return this;
   }
 
