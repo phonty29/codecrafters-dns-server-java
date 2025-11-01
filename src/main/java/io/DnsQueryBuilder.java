@@ -5,7 +5,8 @@ import java.util.Objects;
 
 public class DnsQueryBuilder implements Builder<DnsQuery> {
   private final ByteBuffer queryBuffer;
-  private DnsHeader header;
+  private final DnsHeader header;
+  private final DnsQuestion question;
 
   DnsQueryBuilder(byte[] bytes) {
     if (Objects.isNull(bytes) || bytes.length != 512) {
@@ -13,14 +14,11 @@ public class DnsQueryBuilder implements Builder<DnsQuery> {
     }
     this.queryBuffer = ByteBuffer.wrap(bytes);
     this.header = new DnsHeader(queryBuffer.duplicate().position(0).limit(12).slice());
-  }
-
-  DnsQueryBuilder header() {
-    return this;
+    this.question = new DnsQuestion(queryBuffer.duplicate().position(12).slice(), this.header.getQDCount());
   }
 
   @Override
   public DnsQuery build() {
-    return new DnsQuery(this.queryBuffer, this.header);
+    return new DnsQuery(this.queryBuffer, this.header, this.question);
   }
 }
