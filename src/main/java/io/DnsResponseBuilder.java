@@ -26,7 +26,7 @@ public class DnsResponseBuilder implements Builder<DnsResponse> {
         .transactionId(this.query.getHeader().getPacketID())
         .flags(this.query.getHeader().getFlags())
         .qdCount(this.query.getHeader().getQDCount())
-        .anCount(this.query.getHeader().getANCount())
+        .anCount(this.query.getHeader().getQDCount())
         .nsCount((short) 0)
         .arCount((short) 0)
         .build()
