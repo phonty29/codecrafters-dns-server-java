@@ -4,20 +4,11 @@ import java.nio.ByteBuffer;
 
 class DnsQuestion implements BufferWrapper {
   private final ByteBuffer questionBuffer;
-  private final ByteBuffer[] labels;
+  private final short qdCount;
 
   DnsQuestion(ByteBuffer questionBuffer, short questionNumber) {
     this.questionBuffer = questionBuffer.duplicate();
-    this.labels = new ByteBuffer[questionNumber];
-    short qIndex = 0, sPos, ePos = 0;
-    while (this.questionBuffer.hasRemaining() && qIndex < questionNumber) {
-      byte nextByte = this.questionBuffer.get();
-      if (nextByte == (byte) 0) {
-        sPos = (short) (ePos + (qIndex > 0 ? 4 : 0));
-        ePos = (short) this.questionBuffer.position();
-        this.labels[qIndex++] = this.questionBuffer.duplicate().position(sPos).limit(ePos).slice();
-      }
-    }
+    this.qdCount = questionNumber;
   }
 
   public ByteBuffer getBuffer() {
@@ -29,6 +20,17 @@ class DnsQuestion implements BufferWrapper {
   }
 
   public ByteBuffer[] getLabels() {
-    return this.labels;
+    this.questionBuffer.clear();
+    ByteBuffer[] labelsBuffer = new ByteBuffer[this.qdCount];
+    short qIndex = 0, sPos, ePos = 0;
+    while (this.questionBuffer.hasRemaining() && qIndex < this.qdCount) {
+      byte nextByte = this.questionBuffer.get();
+      if (nextByte == (byte) 0) {
+        sPos = (short) (ePos + (qIndex > 0 ? 4 : 0));
+        ePos = (short) this.questionBuffer.position();
+        labelsBuffer[qIndex++] = this.questionBuffer.duplicate().position(sPos).limit(ePos).slice();
+      }
+    }
+    return labelsBuffer;
   }
 }
