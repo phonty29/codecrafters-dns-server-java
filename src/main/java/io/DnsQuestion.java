@@ -26,6 +26,7 @@ class DnsQuestion implements BufferWrapper {
   }
 
   private ByteBuffer[] retrieveLabels() {
+    this.questionBuffer.clear();
     ByteBuffer[] labelsBuffer = new ByteBuffer[this.qdCount];
     short qIndex = 0, sPos, ePos = 0;
     while (this.questionBuffer.hasRemaining() && qIndex < this.qdCount) {
