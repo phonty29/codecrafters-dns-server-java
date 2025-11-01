@@ -35,6 +35,10 @@ class DnsHeader implements BufferWrapper {
     return this.headerBuffer.getShort(4);
   }
 
+  public short getANCount() {
+    return this.headerBuffer.getShort(6);
+  }
+
   public static class Flags {
     private short flags;
 

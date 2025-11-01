@@ -14,13 +14,13 @@ class DnsQuestionBuilder implements Builder<DnsQuestion> {
     this.questionBuffer = ByteBuffer.allocate(size);
   }
 
-  DnsQuestionBuilder questions(String[] names) {
-    this.qdCount = (short) names.length;
-    for (var name : names) {
-      this.setQuestion(name);
-    }
-    return this;
-  }
+//  DnsQuestionBuilder questions(String[] names) {
+//    this.qdCount = (short) names.length;
+//    for (var name : names) {
+//      this.setQuestion(name);
+//    }
+//    return this;
+//  }
 
   DnsQuestionBuilder questions(ByteBuffer[] labels) {
     this.qdCount = (short) labels.length;
@@ -37,24 +37,24 @@ class DnsQuestionBuilder implements Builder<DnsQuestion> {
         this.qdCount);
   }
 
-  private void setQuestion(String name) {
-    String[] domainParts = name.split("\\.");
-    String secondLevelDomainName = domainParts[0];
-    String topLevelDomainName = domainParts[1];
-    byte terminator = 0;
-
-    // Name
-    this.questionBuffer
-        .put((byte) secondLevelDomainName.length())
-        .put(secondLevelDomainName.getBytes(StandardCharsets.UTF_8))
-        .put((byte) topLevelDomainName.length())
-        .put(topLevelDomainName.getBytes())
-        .put(terminator);
-    // Type
-    this.questionBuffer.putShort(A.value());
-    // Class
-    this.questionBuffer.putShort(IN.value());
-  }
+//  private void setQuestion(String name) {
+//    String[] domainParts = name.split("\\.");
+//    String secondLevelDomainName = domainParts[0];
+//    String topLevelDomainName = domainParts[1];
+//    byte terminator = 0;
+//
+//    // Name
+//    this.questionBuffer
+//        .put((byte) secondLevelDomainName.length())
+//        .put(secondLevelDomainName.getBytes(StandardCharsets.UTF_8))
+//        .put((byte) topLevelDomainName.length())
+//        .put(topLevelDomainName.getBytes())
+//        .put(terminator);
+//    // Type
+//    this.questionBuffer.putShort(A.value());
+//    // Class
+//    this.questionBuffer.putShort(IN.value());
+//  }
 
   private void setQuestion(ByteBuffer label) {
     // Question domain

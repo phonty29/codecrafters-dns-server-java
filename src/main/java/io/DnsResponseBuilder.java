@@ -9,8 +9,6 @@ public class DnsResponseBuilder implements Builder<DnsResponse> {
   private DnsQuery query;
 
   private final static int MAX_DNS_PACKET_SIZE = 512;
-  private final static String[] questions = {"codecrafters.io"};
-  private final static String[] resourceRecords = {"codecrafters.io"};
 
   public DnsResponseBuilder() {
     this.messageBuffer = ByteBuffer.allocate(MAX_DNS_PACKET_SIZE).order(ByteOrder.BIG_ENDIAN);
@@ -27,8 +25,8 @@ public class DnsResponseBuilder implements Builder<DnsResponse> {
     return new DnsHeaderBuilder()
         .transactionId(this.query.getHeader().getPacketID())
         .flags(this.query.getHeader().getFlags())
-        .qdCount((short) questions.length)
-        .anCount((short) resourceRecords.length)
+        .qdCount(this.query.getHeader().getQDCount())
+        .anCount(this.query.getHeader().getANCount())
         .nsCount((short) 0)
         .arCount((short) 0)
         .build()
