@@ -17,12 +17,12 @@ class DnsAnswerBuilder implements Builder<DnsAnswer> {
     this.answerBuffer = ByteBuffer.allocate(size);
   }
 
-//  DnsAnswerBuilder answers(String[] records) {
-//    for (var record : records) {
-//      this.setResourceRecord(record);
-//    }
-//    return this;
-//  }
+  DnsAnswerBuilder answers(String[] records) {
+    for (var record : records) {
+      this.setResourceRecord(record);
+    }
+    return this;
+  }
 
   DnsAnswerBuilder answers(ByteBuffer[] records) {
     for (var record : records) {
@@ -37,30 +37,30 @@ class DnsAnswerBuilder implements Builder<DnsAnswer> {
     return new DnsAnswer(this.answerBuffer.duplicate().position(0).limit(cursor).slice());
   }
 
-//  private void setResourceRecord(String name) {
-//    String[] domainParts = name.split("\\.");
-//    String secondLevelDomainName = domainParts[0];
-//    String topLevelDomainName = domainParts[1];
-//    byte terminator = 0;
-//
-//    // Name
-//    this.answerBuffer
-//        .put((byte) secondLevelDomainName.length())
-//        .put(secondLevelDomainName.getBytes(StandardCharsets.UTF_8))
-//        .put((byte) topLevelDomainName.length())
-//        .put(topLevelDomainName.getBytes())
-//        .put(terminator);
-//    // Type
-//    this.answerBuffer.putShort(A.value());
-//    // Class
-//    this.answerBuffer.putShort(IN.value());
-//    // TTL (Time-to-live)
-//    this.answerBuffer.putInt(TTL);
-//    // Length (RDLENGTH
-//    this.answerBuffer.putShort(RDLENGTH);
-//    // Data (RDATA)
-//    this.answerBuffer.put(Inet4Address.getLoopbackAddress().getAddress());
-//  }
+  private void setResourceRecord(String name) {
+    String[] domainParts = name.split("\\.");
+    String secondLevelDomainName = domainParts[0];
+    String topLevelDomainName = domainParts[1];
+    byte terminator = 0;
+
+    // Name
+    this.answerBuffer
+        .put((byte) secondLevelDomainName.length())
+        .put(secondLevelDomainName.getBytes(StandardCharsets.UTF_8))
+        .put((byte) topLevelDomainName.length())
+        .put(topLevelDomainName.getBytes())
+        .put(terminator);
+    // Type
+    this.answerBuffer.putShort(A.value());
+    // Class
+    this.answerBuffer.putShort(IN.value());
+    // TTL (Time-to-live)
+    this.answerBuffer.putInt(TTL);
+    // Length (RDLENGTH
+    this.answerBuffer.putShort(RDLENGTH);
+    // Data (RDATA)
+    this.answerBuffer.put(Inet4Address.getLoopbackAddress().getAddress());
+  }
 
   private void setResourceRecord(ByteBuffer record) {
     // Name
