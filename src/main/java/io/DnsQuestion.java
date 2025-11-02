@@ -28,17 +28,16 @@ class DnsQuestion implements BufferWrapper {
     short qIndex = 0, sPos, ePos = 0;
     while (this.questionBuffer.hasRemaining() && qIndex < this.qdCount) {
       byte nextByte = this.questionBuffer.get();
-      System.out.println("Byte: " + nextByte);
       if (nextByte == pointer) {
         byte offset = this.questionBuffer.get();
         this.questionBuffer.position(offset - DnsHeader.SIZE);
         continue;
       }
       if (nextByte == terminator) {
-        System.out.println("Terminator");
         sPos = (short) (ePos + (qIndex > 0 ? 4 : 0));
         ePos = (short) this.questionBuffer.position();
         labelsBuffer[qIndex++] = this.questionBuffer.duplicate().position(sPos).limit(ePos).slice();
+        this.questionBuffer.position(ePos + 4);
       }
     }
     return labelsBuffer;
