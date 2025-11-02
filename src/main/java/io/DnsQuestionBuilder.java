@@ -4,7 +4,6 @@ import static consts.QuestionClass.IN;
 import static consts.QuestionType.A;
 
 import java.nio.ByteBuffer;
-import java.nio.charset.StandardCharsets;
 
 class DnsQuestionBuilder implements Builder<DnsQuestion> {
   private final ByteBuffer questionBuffer;
