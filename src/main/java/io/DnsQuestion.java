@@ -30,10 +30,9 @@ class DnsQuestion implements BufferWrapper {
       byte nextByte = this.questionBuffer.get();
       System.out.println("Label byte");
       if (isPointer(nextByte)) {
-        System.out.println("Pointer");
-//        byte offset = this.questionBuffer.get();
-//        this.questionBuffer.position(offset - DnsHeader.SIZE);
-        continue;
+        System.out.println("Pointer " + nextByte);
+        byte offset = this.questionBuffer.get();
+        int currentPosition = this.questionBuffer.position();
       }
       if (nextByte == terminator) {
         System.out.println("Terminator");
