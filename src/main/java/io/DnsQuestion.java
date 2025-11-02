@@ -1,13 +1,15 @@
 package io;
 
 import java.nio.ByteBuffer;
+import java.util.HashMap;
+import java.util.Map;
 
 class DnsQuestion implements BufferWrapper {
   private final ByteBuffer questionBuffer;
   private final short qdCount;
+  private final Map<Integer, ByteBuffer> labelsMap = new HashMap<>();
 
   private final static byte terminator = 0;
-  private final static byte pointer = (byte) 0xC0;
 
   DnsQuestion(ByteBuffer questionBuffer, short questionNumber) {
     this.questionBuffer = questionBuffer.duplicate();
@@ -26,20 +28,26 @@ class DnsQuestion implements BufferWrapper {
     this.questionBuffer.clear();
     ByteBuffer[] labelsBuffer = new ByteBuffer[this.qdCount];
     short qIndex = 0, sPos, ePos = 0;
+    int offset = DnsHeader.SIZE;
+
     while (this.questionBuffer.hasRemaining() && qIndex < this.qdCount) {
+      int currentPosition = this.questionBuffer.position();
       byte nextByte = this.questionBuffer.get();
-      System.out.println("Label byte");
-      if (isPointer(nextByte)) {
-        System.out.println("Pointer " + nextByte);
-        byte offset = this.questionBuffer.get();
-        int currentPosition = this.questionBuffer.position();
-      }
       if (nextByte == terminator) {
-        System.out.println("Terminator");
-        sPos = (short) (ePos + (qIndex > 0 ? 4 : 0));
-        ePos = (short) this.questionBuffer.position();
-        labelsBuffer[qIndex++] = this.questionBuffer.duplicate().position(sPos).limit(ePos).slice();
-        this.questionBuffer.position(ePos + 4);
+        sPos = ePos;
+        ePos = (short) this.questionBuffer.position(); // current position
+        labelsBuffer[qIndex++] = this.questionBuffer.position(sPos).limit(ePos).slice();
+        ePos += 4;  // skip 4 bytes to the next question
+        this.questionBuffer.position(ePos);
+      }
+      else if (isPointer(nextByte)) {
+        byte restByte = this.questionBuffer.get();
+      } else {
+        // if nextByte = label's length
+        // map each label with its offset
+        labelsMap.put(offset, this.questionBuffer.position(currentPosition).limit(nextByte).slice());
+        this.questionBuffer.position(currentPosition + 1 + nextByte);
+        offset += nextByte + 1;
       }
     }
     return labelsBuffer;
