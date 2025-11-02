@@ -30,10 +30,10 @@ class DnsQuestion implements BufferWrapper {
     short qIndex = 0, sPos, ePos = 0;
     while (this.questionBuffer.hasRemaining() && qIndex < this.qdCount) {
       byte nextByte = this.questionBuffer.get();
-      if (nextByte == (byte) 0) {
+      if (nextByte == terminator) {
         sPos = ePos;
         ePos = (short) this.questionBuffer.position();
-        labelsBuffer[qIndex++] = this.questionBuffer.position(sPos).limit(ePos).slice();
+        labelsBuffer[qIndex++] = this.questionBuffer.duplicate().position(sPos).limit(ePos).slice();
         ePos += 4;
         System.out.println("Limit: " + this.questionBuffer.limit());
         System.out.println("Capacity: " + this.questionBuffer.capacity());
