@@ -28,8 +28,8 @@ class DnsQuestion implements BufferWrapper {
     short qIndex = 0, sPos, ePos = 0;
     while (this.questionBuffer.hasRemaining() && qIndex < this.qdCount) {
       byte nextByte = this.questionBuffer.get();
+      System.out.println("Question buffer iteration");
       if (nextByte == pointer) {
-        System.out.println("DnsQuestion met pointer");
         byte offset = this.questionBuffer.get();
         this.questionBuffer.position(offset - DnsHeader.SIZE);
         continue;
