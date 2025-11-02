@@ -36,6 +36,7 @@ class DnsQuestion implements BufferWrapper {
         labelsBuffer[qIndex++] = this.questionBuffer.position(sPos).limit(ePos).slice();
         ePos += 4;
         System.out.println("ePos: " + ePos);
+        System.out.println("Position: " + this.questionBuffer.position());
         System.out.println("Remaining: " + this.questionBuffer.remaining());
         this.questionBuffer.position(ePos);
       }
