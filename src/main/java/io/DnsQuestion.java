@@ -29,9 +29,10 @@ class DnsQuestion implements BufferWrapper {
     while (this.questionBuffer.hasRemaining() && qIndex < this.qdCount) {
       byte nextByte = this.questionBuffer.get();
       System.out.println("Label byte");
-      if (nextByte == pointer) {
-        byte offset = this.questionBuffer.get();
-        this.questionBuffer.position(offset - DnsHeader.SIZE);
+      if (isPointer(nextByte)) {
+        System.out.println("Pointer");
+//        byte offset = this.questionBuffer.get();
+//        this.questionBuffer.position(offset - DnsHeader.SIZE);
         continue;
       }
       if (nextByte == terminator) {
@@ -43,5 +44,10 @@ class DnsQuestion implements BufferWrapper {
       }
     }
     return labelsBuffer;
+  }
+
+  private boolean isPointer(byte nextByte) {
+    byte pointerMask = (byte) 0b11000000;
+    return (nextByte & pointerMask) == pointerMask;
   }
 }
