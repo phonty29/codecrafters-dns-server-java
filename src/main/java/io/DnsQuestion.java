@@ -1,6 +1,7 @@
 package io;
 
 import java.nio.ByteBuffer;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -35,13 +36,12 @@ class DnsQuestion implements BufferWrapper {
         ePos = (short) this.questionBuffer.position();
         labelsBuffer[qIndex++] = this.questionBuffer.duplicate().position(sPos).limit(ePos).slice();
         ePos += 4;
-        System.out.println("Limit: " + this.questionBuffer.limit());
-        System.out.println("Capacity: " + this.questionBuffer.capacity());
         if (ePos <= this.questionBuffer.limit()) {
           this.questionBuffer.position(ePos);
         }
       }
     }
+    System.out.println(labelsBuffer.length);
     return labelsBuffer;
   }
 
