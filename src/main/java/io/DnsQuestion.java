@@ -1,7 +1,9 @@
 package io;
 
+import static utils.ByteUtils.getOffsetFromPointer;
+import static utils.ByteUtils.isPointer;
+
 import java.nio.ByteBuffer;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -47,23 +49,16 @@ class DnsQuestion implements BufferWrapper {
         this.questionBuffer.position(qOffset);
         byte labelLength = this.questionBuffer.get();
         ByteBuffer duplicate = this.questionBuffer.duplicate().position(qOffset).limit(qOffset+labelLength+1).slice();
-        labelsMap.put((int) qOffset, duplicate);
+        labelsMap.put((int) offset, duplicate);
 
         this.questionBuffer.position(currentPosition);
       }
     }
 
-    System.out.println(labelsMap.keySet());
     return labelsBuffer;
   }
 
-  private short getOffsetFromPointer(byte nextByte, byte restByte) {
-    short pointer = (short) (((nextByte & 0xFF) << 8) | (restByte & 0xFF));
-    return (short) (pointer & ~(0b11 << 14));
-  }
-
-  private boolean isPointer(byte nextByte) {
-    byte pointerMask = (byte) 0b11000000;
-    return (nextByte & pointerMask) == pointerMask;
+  public Map<Integer, ByteBuffer> getLabelsMap() {
+    return this.labelsMap;
   }
 }

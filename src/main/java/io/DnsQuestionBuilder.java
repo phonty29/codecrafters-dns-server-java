@@ -2,12 +2,16 @@ package io;
 
 import static consts.QuestionClass.IN;
 import static consts.QuestionType.A;
+import static utils.ByteUtils.getOffsetFromPointer;
+import static utils.ByteUtils.isPointer;
 
 import java.nio.ByteBuffer;
+import java.util.Map;
 
 class DnsQuestionBuilder implements Builder<DnsQuestion> {
   private final ByteBuffer questionBuffer;
   private short qdCount = 0;
+  private Map<Integer, ByteBuffer> labelsMap;
 
   DnsQuestionBuilder(int size) {
     this.questionBuffer = ByteBuffer.allocate(size);
@@ -21,8 +25,9 @@ class DnsQuestionBuilder implements Builder<DnsQuestion> {
 //    return this;
 //  }
 
-  DnsQuestionBuilder questions(ByteBuffer[] labels) {
+  DnsQuestionBuilder questions(ByteBuffer[] labels, Map<Integer, ByteBuffer> map) {
     this.qdCount = (short) labels.length;
+    this.labelsMap = map;
     for (var label : labels) {
       this.setQuestion(label);
     }
@@ -57,6 +62,17 @@ class DnsQuestionBuilder implements Builder<DnsQuestion> {
 
   private void setQuestion(ByteBuffer label) {
     // Question domain
+    System.out.println(label.position());
+    System.out.println(label.remaining());
+    System.out.println(label.capacity());
+    System.out.println(label.limit());
+//    for (int i = 0; i < label.limit(); i++) {
+//      byte nextByte = label.get(i);
+//      if (isPointer(nextByte)) {
+//        short offset = getOffsetFromPointer(nextByte, label.get(i+1));
+//
+//      }
+//    }
     this.questionBuffer.put(label);
     // Type
     this.questionBuffer.putShort(A.value());
