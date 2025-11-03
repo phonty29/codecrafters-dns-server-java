@@ -47,9 +47,6 @@ class DnsQuestion implements BufferWrapper {
         }
       }
     }
-    for (var labelBuffer : labelsBuffer) {
-      System.out.println(new String(labelBuffer.array()));
-    }
     return labelsBuffer;
   }
 
