@@ -62,17 +62,16 @@ class DnsQuestionBuilder implements Builder<DnsQuestion> {
 
   private void setQuestion(ByteBuffer label) {
     // Question domain
-    System.out.println(label.position());
-    System.out.println(label.remaining());
-    System.out.println(label.capacity());
-    System.out.println(label.limit());
-//    for (int i = 0; i < label.limit(); i++) {
-//      byte nextByte = label.get(i);
-//      if (isPointer(nextByte)) {
-//        short offset = getOffsetFromPointer(nextByte, label.get(i+1));
-//
-//      }
-//    }
+    for (int i = 0; i < label.limit(); i++) {
+      byte nextByte = label.get(i);
+      if (isPointer(nextByte)) {
+        short offset = getOffsetFromPointer(nextByte, label.get(i+1));
+        ByteBuffer mappedBuffer = this.labelsMap.get((int) offset);
+        if (mappedBuffer != null) {
+          System.out.println(mappedBuffer.array());
+        }
+      }
+    }
     this.questionBuffer.put(label);
     // Type
     this.questionBuffer.putShort(A.value());
