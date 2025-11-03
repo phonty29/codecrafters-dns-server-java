@@ -42,9 +42,7 @@ class DnsQuestion implements BufferWrapper {
       }
     }
 
-    System.out.println(labelsBuffer.length);
     for (var label : labelsBuffer) {
-      System.out.println(label.limit());
       for (int i = 0; i < label.limit(); i++) {
         byte nextByte = label.get(i);
         if (isPointer(nextByte)) {
@@ -55,7 +53,7 @@ class DnsQuestion implements BufferWrapper {
           System.out.println("Terminator");
         }
         else {
-//          System.out.println("Length: " + nextByte);
+          System.out.println("Length: " + nextByte);
         }
       }
     }
