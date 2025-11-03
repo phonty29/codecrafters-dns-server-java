@@ -47,13 +47,11 @@ class DnsQuestion implements BufferWrapper {
         this.questionBuffer.position(qOffset);
         byte labelLength = this.questionBuffer.get();
         ByteBuffer duplicate = this.questionBuffer.duplicate().position(qOffset).limit(qOffset+labelLength+1).slice();
-        labelsMap.put(qOffset, duplicate);
 
         this.questionBuffer.position(currentPosition);
       }
     }
 
-    System.out.println(labelsMap.keySet());
     return labelsBuffer;
   }
 
