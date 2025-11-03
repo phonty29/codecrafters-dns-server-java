@@ -79,6 +79,9 @@ class DnsQuestionBuilder implements Builder<DnsQuestion> {
     }
     int currentPosition = copyBuffer.position();
     finalLabel = copyBuffer.duplicate().position(0).limit(currentPosition).slice();
+    System.out.println("finalLabel.capacity: " + finalLabel.capacity());
+    System.out.println("finalLabel.limit: " + finalLabel.limit());
+    System.out.println("finalLabel.remaining: " + finalLabel.remaining());
 
     this.questionBuffer.put(finalLabel);
     // Type
