@@ -39,24 +39,10 @@ class DnsQuestion implements BufferWrapper {
         if (ePos <= this.questionBuffer.limit()) {
           this.questionBuffer.position(ePos);
         }
-      }
-    }
-
-    for (var label : labelsBuffer) {
-      System.out.println("Label Position: " + label.position());
-      System.out.println("Label Limit: " + label.limit());
-      for (int i = 0; i < label.limit(); i++) {
-        byte nextByte = label.get(i);
-        if (isPointer(nextByte)) {
-          System.out.println("Pointer");
-        } else if ((nextByte >= 65 && nextByte <= 90) || (nextByte >= 97 && nextByte <= 122)) {
-          System.out.println("Letter: " + (char) nextByte);
-        } else if (nextByte == terminator) {
-          System.out.println("Terminator");
-        }
-        else {
-          System.out.println("Length: " + nextByte);
-        }
+        System.out.println("Terminator");
+      } else if (isPointer(nextByte)) {
+        short offset = getOffsetFromPointer(nextByte, this.questionBuffer.get());
+        System.out.println("Pointer: " + offset);
       }
     }
     return labelsBuffer;
@@ -92,9 +78,9 @@ class DnsQuestion implements BufferWrapper {
 //    return labelsBuffer;
 //  }
 
-  private int getOffsetFromPointer(byte nextByte, byte restByte) {
+  private short getOffsetFromPointer(byte nextByte, byte restByte) {
     short pointer = (short) (((nextByte & 0xFF) << 8) | (restByte & 0xFF));
-    return 0;
+    return (short) (pointer & ~(0b11 << 14));
   }
 
   private boolean isPointer(byte nextByte) {
