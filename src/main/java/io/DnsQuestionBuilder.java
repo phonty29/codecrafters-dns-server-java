@@ -67,8 +67,10 @@ class DnsQuestionBuilder implements Builder<DnsQuestion> {
       byte nextByte = label.get(i);
       if (isPointer(nextByte)) {
         short offset = getOffsetFromPointer(nextByte, label.get(i+1));
-        System.out.println("offset: " + offset);
         ByteBuffer mappedBuffer = this.labelsMap.get((int) offset);
+        System.out.println("mappedBuffer.capacity " + mappedBuffer.capacity());
+        System.out.println("mappedBuffer.limit" + mappedBuffer.limit());
+        System.out.println("mappedBuffer.remaining" + mappedBuffer.remaining());
       }
     }
     this.questionBuffer.put(label);
