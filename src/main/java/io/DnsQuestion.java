@@ -40,25 +40,26 @@ class DnsQuestion implements BufferWrapper {
           this.questionBuffer.position(ePos);
         }
       } else if (isPointer(nextByte)) {
-        int offset = getOffsetFromPointer(nextByte, this.questionBuffer.get());
-        int qOffset = offset - DnsHeader.SIZE;
+        short offset = getOffsetFromPointer(nextByte, this.questionBuffer.get());
+        short qOffset = (short) (offset - DnsHeader.SIZE);
         int currentPosition = this.questionBuffer.position();
         // Cache referred label by its offset
-        System.out.println("qOffset: " + qOffset);
         this.questionBuffer.position(qOffset);
         byte labelLength = this.questionBuffer.get();
         ByteBuffer duplicate = this.questionBuffer.duplicate().position(qOffset).limit(qOffset+labelLength+1).slice();
+        labelsMap.put((int) qOffset, duplicate);
 
         this.questionBuffer.position(currentPosition);
       }
     }
 
+    System.out.println(labelsMap.keySet());
     return labelsBuffer;
   }
 
-  private int getOffsetFromPointer(byte nextByte, byte restByte) {
+  private short getOffsetFromPointer(byte nextByte, byte restByte) {
     short pointer = (short) (((nextByte & 0xFF) << 8) | (restByte & 0xFF));
-    return pointer & ~(0b11 << 14);
+    return (short) (pointer & ~(0b11 << 14));
   }
 
   private boolean isPointer(byte nextByte) {
