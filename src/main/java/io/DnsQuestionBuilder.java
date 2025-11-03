@@ -81,6 +81,7 @@ class DnsQuestionBuilder implements Builder<DnsQuestion> {
     }
     int currentPosition = copyBuffer.position();
     finalLabel = copyBuffer.duplicate().position(0).limit(currentPosition).slice();
+
     for (int i = 0; i < finalLabel.limit(); i++) {
       byte b = finalLabel.get(i);
       if ((b >= 'A' && b <= 'Z') || (b >= 'a' && b <= 'z')) {
