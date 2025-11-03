@@ -8,6 +8,7 @@ import static utils.ByteUtils.isPointer;
 import java.nio.ByteBuffer;
 import java.util.Arrays;
 import java.util.Map;
+import java.util.Objects;
 
 class DnsQuestionBuilder implements Builder<DnsQuestion> {
   private final ByteBuffer questionBuffer;
@@ -70,10 +71,7 @@ class DnsQuestionBuilder implements Builder<DnsQuestion> {
       if (isPointer(nextByte)) {
         short offset = getOffsetFromPointer(nextByte, label.get(i+1));
         ByteBuffer mappedBuffer = this.labelsMap.get((int) offset);
-        if (mappedBuffer != null) {
-          System.out.println(mappedBuffer.capacity());
-          System.out.println(mappedBuffer.limit());
-          System.out.println(mappedBuffer.remaining());
+        if (Objects.nonNull(mappedBuffer)) {
           copyBuffer.put(mappedBuffer);
         }
       } else {
@@ -81,10 +79,8 @@ class DnsQuestionBuilder implements Builder<DnsQuestion> {
       }
     }
     int currentPosition = copyBuffer.position();
+    System.out.println("currentPosition: " + currentPosition);
     finalLabel = copyBuffer.duplicate().position(0).limit(currentPosition).slice();
-    System.out.println("finalLabel.capacity: " + finalLabel.capacity());
-    System.out.println("finalLabel.limit: " + finalLabel.limit());
-    System.out.println("finalLabel.remaining: " + finalLabel.remaining());
 
     this.questionBuffer.put(finalLabel);
     // Type
