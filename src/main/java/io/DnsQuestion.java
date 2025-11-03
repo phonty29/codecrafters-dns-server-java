@@ -39,44 +39,22 @@ class DnsQuestion implements BufferWrapper {
         if (ePos <= this.questionBuffer.limit()) {
           this.questionBuffer.position(ePos);
         }
-        System.out.println("Terminator");
       } else if (isPointer(nextByte)) {
         short offset = getOffsetFromPointer(nextByte, this.questionBuffer.get());
-        System.out.println("Pointer: " + offset);
+
+        int currentPosition = this.questionBuffer.position();
+        this.questionBuffer.position(offset - DnsHeader.SIZE);
+        byte labelLength = this.questionBuffer.get();
+        var duplicate = this.questionBuffer.duplicate().position(offset-DnsHeader.SIZE).limit(offset-DnsHeader.SIZE+labelLength+1).slice();
+        for (int i = 0; i < duplicate.limit(); i++) {
+          System.out.println("Byte: " + duplicate.get(i));
+        }
+
+        this.questionBuffer.position(currentPosition);
       }
     }
     return labelsBuffer;
   }
-
-//  public ByteBuffer[] getLabels() {
-//    this.questionBuffer.clear();
-//    ByteBuffer[] labelsBuffer = new ByteBuffer[this.qdCount];
-//    short qIndex = 0, sPos, ePos = 0;
-//    int offset = DnsHeader.SIZE;
-//
-//    while (this.questionBuffer.hasRemaining() && qIndex < this.qdCount) {
-//      int currentPosition = this.questionBuffer.position();
-//      byte nextByte = this.questionBuffer.get();
-//      if (nextByte == terminator) {
-//        sPos = ePos;
-//        ePos = (short) this.questionBuffer.position(); // current position
-//        labelsBuffer[qIndex++] = this.questionBuffer.position(sPos).limit(ePos).slice();
-//        ePos += 4;  // skip 4 bytes to the next question
-//        this.questionBuffer.position(ePos);
-//      }
-//      else if (isPointer(nextByte)) {
-//        byte restByte = this.questionBuffer.get();
-//        int pointerOffset = getOffsetFromPointer(nextByte, restByte);
-//      } else {
-//        // if nextByte = label's length
-//        // map each label with its offset
-//        labelsMap.put(offset, this.questionBuffer.position(currentPosition).limit(nextByte).slice());
-//        this.questionBuffer.position(currentPosition + 1 + nextByte);
-//        offset += nextByte + 1;
-//      }
-//    }
-//    return labelsBuffer;
-//  }
 
   private short getOffsetFromPointer(byte nextByte, byte restByte) {
     short pointer = (short) (((nextByte & 0xFF) << 8) | (restByte & 0xFF));
