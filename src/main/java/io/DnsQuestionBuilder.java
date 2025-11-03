@@ -6,6 +6,7 @@ import static utils.ByteUtils.getOffsetFromPointer;
 import static utils.ByteUtils.isPointer;
 
 import java.nio.ByteBuffer;
+import java.util.Arrays;
 import java.util.Map;
 
 class DnsQuestionBuilder implements Builder<DnsQuestion> {
@@ -68,7 +69,7 @@ class DnsQuestionBuilder implements Builder<DnsQuestion> {
         short offset = getOffsetFromPointer(nextByte, label.get(i+1));
         ByteBuffer mappedBuffer = this.labelsMap.get((int) offset);
         if (mappedBuffer != null) {
-          System.out.println(mappedBuffer.array());
+          System.out.println(Arrays.toString(mappedBuffer.array()));
         }
       }
     }
