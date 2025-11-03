@@ -32,7 +32,6 @@ class DnsQuestion implements BufferWrapper {
     while (this.questionBuffer.hasRemaining() && qIndex < this.qdCount) {
       byte nextByte = this.questionBuffer.get();
       if (nextByte == terminator) {
-        System.out.println("Terminator");
         sPos = ePos;
         ePos = (short) this.questionBuffer.position();
         labelsBuffer[qIndex++] = this.questionBuffer.duplicate().position(sPos).limit(ePos).slice();
@@ -47,8 +46,7 @@ class DnsQuestion implements BufferWrapper {
       for (var nextByte : label.array()) {
         if (isPointer(nextByte)) {
           System.out.println("Pointer");
-        }
-        else if ((nextByte >= 65 && nextByte <= 90) || (nextByte >= 97 && nextByte <= 122)) {
+        } else if ((nextByte >= 65 && nextByte <= 90) || (nextByte >= 97 && nextByte <= 122)) {
           System.out.println("Letter: " + (char) nextByte);
         } else if (nextByte == terminator) {
           System.out.println("Terminator");
