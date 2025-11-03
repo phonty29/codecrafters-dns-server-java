@@ -63,8 +63,6 @@ class DnsQuestionBuilder implements Builder<DnsQuestion> {
 //  }
 
   private void setQuestion(ByteBuffer label) {
-    // Question domain
-    ByteBuffer finalLabel;
     ByteBuffer copyBuffer = ByteBuffer.allocate(512);
     for (int i = 0; i < label.limit(); i++) {
       byte nextByte = label.get(i);
@@ -79,16 +77,10 @@ class DnsQuestionBuilder implements Builder<DnsQuestion> {
         copyBuffer.put(nextByte);
       }
     }
-    int currentPosition = copyBuffer.position();
-    finalLabel = copyBuffer.duplicate().position(0).limit(currentPosition).slice();
-    System.out.println("finalLabel");
-    System.out.println(finalLabel.position());
-    System.out.println(finalLabel.limit());
-    System.out.println(finalLabel.remaining());
-    System.out.println(finalLabel.capacity());
+    int limit = copyBuffer.position();
 
-
-    this.questionBuffer.put(finalLabel);
+    // Question domain
+    this.questionBuffer.put(copyBuffer.duplicate().position(0).limit(limit).slice());
     // Type
     this.questionBuffer.putShort(A.value());
     // Class
