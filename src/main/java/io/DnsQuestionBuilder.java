@@ -81,15 +81,12 @@ class DnsQuestionBuilder implements Builder<DnsQuestion> {
     }
     int currentPosition = copyBuffer.position();
     finalLabel = copyBuffer.duplicate().position(0).limit(currentPosition).slice();
+    System.out.println("finalLabel");
+    System.out.println(finalLabel.position());
+    System.out.println(finalLabel.limit());
+    System.out.println(finalLabel.remaining());
+    System.out.println(finalLabel.capacity());
 
-    for (int i = 0; i < finalLabel.limit(); i++) {
-      byte b = finalLabel.get(i);
-      if ((b >= 'A' && b <= 'Z') || (b >= 'a' && b <= 'z')) {
-        System.out.println("Letter: " + (char) b);
-      } else {
-        System.out.println("Length: " + b);
-      }
-    }
 
     this.questionBuffer.put(finalLabel);
     // Type
