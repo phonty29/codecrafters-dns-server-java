@@ -43,6 +43,7 @@ class DnsQuestion implements BufferWrapper {
     }
 
     for (var label : labelsBuffer) {
+      System.out.println("Label Limit: " + label.limit());
       for (int i = 0; i < label.limit(); i++) {
         byte nextByte = label.get(i);
         if (isPointer(nextByte)) {
