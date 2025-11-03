@@ -36,6 +36,9 @@ class DnsQuestion implements BufferWrapper {
       } else {
         System.out.println("Length: " + nextByte);
       }
+      if (isPointer(nextByte)) {
+        System.out.println("Pointer");
+      }
       if (nextByte == terminator) {
         System.out.println("Terminator");
         sPos = ePos;
