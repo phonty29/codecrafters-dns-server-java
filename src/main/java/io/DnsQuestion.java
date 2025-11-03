@@ -52,7 +52,6 @@ class DnsQuestion implements BufferWrapper {
         while (this.questionBuffer.hasRemaining() && this.questionBuffer.get() != terminator) {
             limit = this.questionBuffer.position();
         }
-        System.out.println("Start: " + qOffset + ", limit: " + limit);
         ByteBuffer duplicate = this.questionBuffer.duplicate().position(qOffset).limit(limit).slice();
         labelsMap.put((int) offset, duplicate);
 
