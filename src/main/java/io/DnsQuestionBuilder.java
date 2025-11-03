@@ -74,6 +74,7 @@ class DnsQuestionBuilder implements Builder<DnsQuestion> {
         if (Objects.nonNull(mappedBuffer)) {
           copyBuffer.put(mappedBuffer);
         }
+        i += 2;
       } else {
         copyBuffer.put(nextByte);
       }
