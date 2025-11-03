@@ -40,31 +40,26 @@ class DnsQuestion implements BufferWrapper {
           this.questionBuffer.position(ePos);
         }
       } else if (isPointer(nextByte)) {
-        short offset = getOffsetFromPointer(nextByte, this.questionBuffer.get());
-
+        int offset = getOffsetFromPointer(nextByte, this.questionBuffer.get());
+        int qOffset = offset - DnsHeader.SIZE;
         int currentPosition = this.questionBuffer.position();
-
-        this.questionBuffer.position(offset - DnsHeader.SIZE);
+        // Cache referred label by its offset
+        this.questionBuffer.position(qOffset);
         byte labelLength = this.questionBuffer.get();
-        var duplicate = this.questionBuffer.duplicate().position(offset-DnsHeader.SIZE).limit(offset-DnsHeader.SIZE+labelLength+1).slice();
-        for (int i = 0; i < duplicate.limit(); i++) {
-          var b = duplicate.get(i);
-          if ((b >= 'A' && b <= 'Z') || (b >= 'a' && b <= 'z')) {
-            System.out.println("Letter: " + (char) b);
-          } else {
-            System.out.println("Length: " + b);
-          }
-        }
+        ByteBuffer duplicate = this.questionBuffer.duplicate().position(qOffset).limit(qOffset+labelLength+1).slice();
+        labelsMap.put(qOffset, duplicate);
 
         this.questionBuffer.position(currentPosition);
       }
     }
+
+    System.out.println(labelsMap.keySet());
     return labelsBuffer;
   }
 
-  private short getOffsetFromPointer(byte nextByte, byte restByte) {
+  private int getOffsetFromPointer(byte nextByte, byte restByte) {
     short pointer = (short) (((nextByte & 0xFF) << 8) | (restByte & 0xFF));
-    return (short) (pointer & ~(0b11 << 14));
+    return pointer & ~(0b11 << 14);
   }
 
   private boolean isPointer(byte nextByte) {
