@@ -42,17 +42,19 @@ class DnsQuestion implements BufferWrapper {
       }
     }
 
+    System.out.println(labelsBuffer.length);
     for (var label : labelsBuffer) {
+      System.out.println(label.array().length);
       for (var nextByte : label.array()) {
         if (isPointer(nextByte)) {
-          System.out.println("Pointer");
+//          System.out.println("Pointer");
         } else if ((nextByte >= 65 && nextByte <= 90) || (nextByte >= 97 && nextByte <= 122)) {
-          System.out.println("Letter: " + (char) nextByte);
+//          System.out.println("Letter: " + (char) nextByte);
         } else if (nextByte == terminator) {
-          System.out.println("Terminator");
+//          System.out.println("Terminator");
         }
         else {
-          System.out.println("Length: " + nextByte);
+//          System.out.println("Length: " + nextByte);
         }
       }
     }
