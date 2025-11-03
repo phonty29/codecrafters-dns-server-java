@@ -43,11 +43,17 @@ class DnsQuestion implements BufferWrapper {
         short offset = getOffsetFromPointer(nextByte, this.questionBuffer.get());
 
         int currentPosition = this.questionBuffer.position();
+
         this.questionBuffer.position(offset - DnsHeader.SIZE);
         byte labelLength = this.questionBuffer.get();
         var duplicate = this.questionBuffer.duplicate().position(offset-DnsHeader.SIZE).limit(offset-DnsHeader.SIZE+labelLength+1).slice();
         for (int i = 0; i < duplicate.limit(); i++) {
-          System.out.println("Byte: " + duplicate.get(i));
+          var b = duplicate.get(i);
+          if ((b >= 'A' && b <= 'Z') || (b >= 'a' && b <= 'z')) {
+            System.out.println("Letter: " + b);
+          } else {
+            System.out.println("Length: " + b);
+          }
         }
 
         this.questionBuffer.position(currentPosition);
