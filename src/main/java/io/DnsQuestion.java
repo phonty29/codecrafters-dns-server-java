@@ -44,6 +44,7 @@ class DnsQuestion implements BufferWrapper {
         int qOffset = offset - DnsHeader.SIZE;
         int currentPosition = this.questionBuffer.position();
         // Cache referred label by its offset
+        System.out.println("qOffset: " + qOffset);
         this.questionBuffer.position(qOffset);
         byte labelLength = this.questionBuffer.get();
         ByteBuffer duplicate = this.questionBuffer.duplicate().position(qOffset).limit(qOffset+labelLength+1).slice();
