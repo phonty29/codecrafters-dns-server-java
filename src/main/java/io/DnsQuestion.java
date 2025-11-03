@@ -50,7 +50,7 @@ class DnsQuestion implements BufferWrapper {
         for (int i = 0; i < duplicate.limit(); i++) {
           var b = duplicate.get(i);
           if ((b >= 'A' && b <= 'Z') || (b >= 'a' && b <= 'z')) {
-            System.out.println("Letter: " + b);
+            System.out.println("Letter: " + (char) b);
           } else {
             System.out.println("Length: " + b);
           }
