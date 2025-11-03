@@ -50,11 +50,11 @@ class DnsQuestion implements BufferWrapper {
         }
         else if ((nextByte >= 65 && nextByte <= 90) || (nextByte >= 97 && nextByte <= 122)) {
           System.out.println("Letter: " + (char) nextByte);
-        } else {
-          System.out.println("Length: " + nextByte);
-        }
-        if (nextByte == terminator) {
+        } else if (nextByte == terminator) {
           System.out.println("Terminator");
+        }
+        else {
+          System.out.println("Length: " + nextByte);
         }
       }
     }
