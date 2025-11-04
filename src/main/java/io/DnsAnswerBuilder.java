@@ -12,7 +12,6 @@ import java.util.Objects;
 
 class DnsAnswerBuilder implements Builder<DnsAnswer> {
   private final ByteBuffer answerBuffer;
-  private Map<Integer, ByteBuffer> labelsMap;
 
   private final static int TTL = 60;
   private final static short RDLENGTH = 4;
@@ -21,8 +20,7 @@ class DnsAnswerBuilder implements Builder<DnsAnswer> {
     this.answerBuffer = ByteBuffer.allocate(size);
   }
 
-  DnsAnswerBuilder answers(ByteBuffer[] records, Map<Integer, ByteBuffer> labelsMap) {
-    this.labelsMap = labelsMap;
+  DnsAnswerBuilder answers(ByteBuffer[] records) {
     for (var record : records) {
       this.setResourceRecord(record);
     }
@@ -36,25 +34,8 @@ class DnsAnswerBuilder implements Builder<DnsAnswer> {
   }
 
   private void setResourceRecord(ByteBuffer record) {
-    ByteBuffer copyBuffer = ByteBuffer.allocate(512);
-    for (int i = 0; i < record.limit(); i++) {
-      byte nextByte = record.get(i);
-      if (isPointer(nextByte)) {
-        short offset = getOffsetFromPointer(nextByte, record.get(i+1));
-        ByteBuffer mappedBuffer = this.labelsMap.get((int) offset);
-        if (Objects.nonNull(mappedBuffer)) {
-          mappedBuffer.clear();
-          copyBuffer.put(mappedBuffer);
-        }
-        i += 2;
-      } else {
-        copyBuffer.put(nextByte);
-      }
-    }
-    int limit = copyBuffer.position();
-
     // Name
-    this.answerBuffer.put(copyBuffer.duplicate().position(0).limit(limit).slice());
+    this.answerBuffer.put(record);
     // Type
     this.answerBuffer.putShort(A.value());
     // Class
