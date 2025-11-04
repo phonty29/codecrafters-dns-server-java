@@ -18,7 +18,6 @@ public class Main {
         final DatagramPacket packet = new DatagramPacket(buf, buf.length);
         // Receive datagram packet
         serverSocket.receive(packet);
-        System.out.println("Received data");
 
         final byte[] response = DnsResponse
             .builder()

@@ -19,14 +19,6 @@ class DnsQuestionBuilder implements Builder<DnsQuestion> {
     this.questionBuffer = ByteBuffer.allocate(size);
   }
 
-//  DnsQuestionBuilder questions(String[] names) {
-//    this.qdCount = (short) names.length;
-//    for (var name : names) {
-//      this.setQuestion(name);
-//    }
-//    return this;
-//  }
-
   DnsQuestionBuilder questions(ByteBuffer[] labels, Map<Integer, ByteBuffer> map) {
     this.qdCount = (short) labels.length;
     this.labelsMap = map;
@@ -43,25 +35,6 @@ class DnsQuestionBuilder implements Builder<DnsQuestion> {
         this.qdCount);
   }
 
-//  private void setQuestion(String name) {
-//    String[] domainParts = name.split("\\.");
-//    String secondLevelDomainName = domainParts[0];
-//    String topLevelDomainName = domainParts[1];
-//    byte terminator = 0;
-//
-//    // Name
-//    this.questionBuffer
-//        .put((byte) secondLevelDomainName.length())
-//        .put(secondLevelDomainName.getBytes(StandardCharsets.UTF_8))
-//        .put((byte) topLevelDomainName.length())
-//        .put(topLevelDomainName.getBytes())
-//        .put(terminator);
-//    // Type
-//    this.questionBuffer.putShort(A.value());
-//    // Class
-//    this.questionBuffer.putShort(IN.value());
-//  }
-
   private void setQuestion(ByteBuffer label) {
     ByteBuffer copyBuffer = ByteBuffer.allocate(512);
     for (int i = 0; i < label.limit(); i++) {
@@ -70,6 +43,7 @@ class DnsQuestionBuilder implements Builder<DnsQuestion> {
         short offset = getOffsetFromPointer(nextByte, label.get(i+1));
         ByteBuffer mappedBuffer = this.labelsMap.get((int) offset);
         if (Objects.nonNull(mappedBuffer)) {
+          mappedBuffer.clear();
           copyBuffer.put(mappedBuffer);
         }
         i += 2;

@@ -35,14 +35,14 @@ public class DnsResponseBuilder implements Builder<DnsResponse> {
 
   private ByteBuffer question() {
     return new DnsQuestionBuilder(this.messageBuffer.remaining())
-        .questions(this.query.getQuestion().getLabels(), this.query.getQuestion().getLabelsMap())
+        .questions(this.query.getQuestion().getQuestions(), this.query.getQuestion().getLabelsMap())
         .build()
         .getBuffer();
   }
 
   private ByteBuffer answer() {
     return new DnsAnswerBuilder(this.messageBuffer.remaining())
-        .answers(this.query.getQuestion().getLabels(), this.query.getQuestion().getLabelsMap())
+        .answers(this.query.getQuestion().getQuestions(), this.query.getQuestion().getLabelsMap())
         .build()
         .getBuffer();
   }
