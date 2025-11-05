@@ -9,7 +9,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 
-class DnsQuestion implements BufferWrapper {
+public class DnsQuestion implements BufferWrapper {
   private final ByteBuffer questionBuffer;
   private final short qdCount;
   private final Map<Integer, ByteBuffer> labelsMap = new HashMap<>();
@@ -18,7 +18,7 @@ class DnsQuestion implements BufferWrapper {
 
   private final static byte terminator = 0;
 
-  DnsQuestion(ByteBuffer questionBuffer, short questionNumber) {
+  public DnsQuestion(ByteBuffer questionBuffer, short questionNumber) {
     this.questionBuffer = questionBuffer.duplicate().position(0);
     this.qdCount = questionNumber;
     initQuestions();
@@ -33,11 +33,15 @@ class DnsQuestion implements BufferWrapper {
     return this.questionBuffer.array();
   }
 
+  @Override
+  public int length() {
+    return this.questionBuffer.array().length;
+  }
+
   private void initQuestions() {
     this.questions = new ByteBuffer[this.qdCount];
     ByteBuffer copyBuffer = this.questionBuffer.duplicate();
     short qIndex = 0, sPos, ePos = 0;
-
     while (copyBuffer.hasRemaining() && qIndex < this.qdCount) {
       byte nextByte = copyBuffer.get();
       if (nextByte == terminator) {
@@ -64,6 +68,10 @@ class DnsQuestion implements BufferWrapper {
         copyBuffer.position(currentPosition);
       }
     }
+  }
+
+  public int limit() {
+    return this.questionBuffer.limit();
   }
 
   private void initDecompressedQuestions() {

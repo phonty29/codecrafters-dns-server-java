@@ -1,3 +1,6 @@
+import inet.DnsForwarder;
+import io.DnsHeaderBuilder;
+import io2.DnsQuery;
 import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
@@ -5,28 +8,48 @@ import java.net.DatagramSocket;
 import io.DnsResponse;
 
 public class Main {
+  private final static String RESOLVER = "--resolver";
 
   public static void main(String[] args) {
     System.out.println("Logs from your program will appear here!");
     int port = 2053;
     int bufSize = 512;
 
+    if (args.length < 2) {
+      System.err.println("Usage: java Main [--resolver] [address:port]");
+      System.exit(1);
+    }
+    String forwardServer = args[1];
+
     try (DatagramSocket serverSocket = new DatagramSocket(port)) {
       while (true) {
-        // Allocate buffer
         final byte[] buf = new byte[bufSize];
         final DatagramPacket packet = new DatagramPacket(buf, buf.length);
-        // Receive datagram packet
         serverSocket.receive(packet);
 
-        final byte[] response = DnsResponse
-            .builder()
-            .query(packet.getData())
-            .build()
-            .getBytes();
-        final DatagramPacket packetResponse = new DatagramPacket(response, response.length,
-            packet.getSocketAddress());
-        // Send datagram packet
+        DnsQuery query = DnsQuery.builder(packet.getData()).build();
+//        DnsForwarder forwarder = new DnsForwarder(forwardServer.split(":")[0], forwardServer.split(":")[1]);
+//        DnsResponse resp = forwarder.forward(query);
+
+        byte[] response = new byte[512];
+//        if (query.getHeader().getFlags().getOpcode() != 0) {
+          response = DnsResponse
+              .builder()
+              .header(new DnsHeaderBuilder()
+                  .transactionId(query.getHeader().getPacketID())
+                  .flags(query.getHeader().getFlags(), true)
+                  .qdCount(query.getHeader().getQDCount())
+                  .anCount(query.getHeader().getQDCount())
+                  .nsCount((short) 0)
+                  .arCount((short) 0)
+                  .build())
+              .question(query.getQuestion().getDecompressedQuestions())
+              .answer(query.getQuestion().getDecompressedQuestions())
+              .build()
+              .getBytes();
+//        }
+
+        final DatagramPacket packetResponse = new DatagramPacket(response, response.length, packet.getSocketAddress());
         serverSocket.send(packetResponse);
       }
     } catch (IOException e) {

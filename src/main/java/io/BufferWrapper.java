@@ -6,4 +6,6 @@ public interface BufferWrapper {
   ByteBuffer getBuffer();
 
   byte[] getBytes();
+
+  int length();
 }

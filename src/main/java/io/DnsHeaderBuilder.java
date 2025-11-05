@@ -4,7 +4,7 @@ import io.DnsHeader.Flags;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 
-class DnsHeaderBuilder implements Builder<DnsHeader> {
+public class DnsHeaderBuilder implements Builder<DnsHeader> {
 
   private final ByteBuffer headerBuffer;
 
@@ -12,13 +12,13 @@ class DnsHeaderBuilder implements Builder<DnsHeader> {
   private final static byte NO_ERROR = 0;
   private final static byte NOT_IMPLEMENTED = 4;
 
-  DnsHeaderBuilder() {
+  public DnsHeaderBuilder() {
     this.headerBuffer = ByteBuffer
         .allocate(HEADER_SIZE)
         .order(ByteOrder.BIG_ENDIAN);
   }
 
-  protected DnsHeaderBuilder transactionId(short transactionId) {
+  public DnsHeaderBuilder transactionId(short transactionId) {
     this.headerBuffer.putShort(transactionId);
     return this;
   }
@@ -27,11 +27,10 @@ class DnsHeaderBuilder implements Builder<DnsHeader> {
    * @param queryFlags flags from DNS query
    * @return this
    */
-  protected DnsHeaderBuilder flags(Flags queryFlags) {
+  public DnsHeaderBuilder flags(Flags queryFlags, boolean isResponse) {
     Flags responseFlags = new Flags((short) 0);
-    responseFlags.setQueryResponseIndicator(true);
+    responseFlags.setQueryResponseIndicator(isResponse);
     responseFlags.setOpcode(queryFlags.getOpcode());
-    responseFlags.setRecursionDesired(queryFlags.isRecursionDesired());
     responseFlags.setRecursionDesired(queryFlags.isRecursionDesired());
     if (queryFlags.getOpcode() != 0) {
       responseFlags.setResponseCode(NOT_IMPLEMENTED);
@@ -42,25 +41,25 @@ class DnsHeaderBuilder implements Builder<DnsHeader> {
     return this;
   }
 
-  protected DnsHeaderBuilder qdCount(short qdCount) {
+  public DnsHeaderBuilder qdCount(short qdCount) {
     // Number of questions in the question section
     this.headerBuffer.putShort(qdCount);
     return this;
   }
 
-  protected DnsHeaderBuilder anCount(short anCount) {
+  public DnsHeaderBuilder anCount(short anCount) {
     // Number of answers in the answer section
     this.headerBuffer.putShort(anCount);
     return this;
   }
 
-  protected DnsHeaderBuilder nsCount(short nsCount) {
+  public DnsHeaderBuilder nsCount(short nsCount) {
     // Number of authority records in the authority section
     this.headerBuffer.putShort(nsCount);
     return this;
   }
 
-  protected DnsHeaderBuilder arCount(short arCount) {
+  public DnsHeaderBuilder arCount(short arCount) {
     // Number of additional records in the additional section
     this.headerBuffer.putShort(arCount);
     return this;

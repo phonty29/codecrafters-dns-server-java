@@ -2,11 +2,11 @@ package io;
 
 import java.nio.ByteBuffer;
 
-class DnsHeader implements BufferWrapper {
+public class DnsHeader implements BufferWrapper {
   public final static int SIZE = 12;
   private final ByteBuffer headerBuffer;
 
-  DnsHeader(ByteBuffer headerBuffer) {
+  public DnsHeader(ByteBuffer headerBuffer) {
     this.headerBuffer = headerBuffer.duplicate();
     if (this.headerBuffer.remaining() != SIZE) {
       throw new IllegalStateException("Invalid header size");
@@ -21,6 +21,11 @@ class DnsHeader implements BufferWrapper {
   @Override
   public byte[] getBytes() {
     return this.headerBuffer.array();
+  }
+
+  @Override
+  public int length() {
+    return this.headerBuffer.array().length;
   }
 
   public short getPacketID() {

@@ -21,4 +21,9 @@ public class DnsResponse implements BufferWrapper {
   public byte[] getBytes() {
     return this.responseBuffer.array();
   }
+
+  @Override
+  public int length() {
+    return this.responseBuffer.array().length;
+  }
 }
