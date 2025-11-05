@@ -42,7 +42,7 @@ public class DnsResponseBuilder implements Builder<DnsResponse> {
 
   private ByteBuffer answer() {
     return new DnsAnswerBuilder(this.messageBuffer.remaining())
-        .answers(this.query.getQuestion().getDecompressedQuestions())
+        .questions(this.query.getQuestion().getDecompressedQuestions())
         .build()
         .getBuffer();
   }

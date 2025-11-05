@@ -1,8 +1,5 @@
 package io;
 
-import static consts.QuestionClass.IN;
-import static consts.QuestionType.A;
-
 import java.nio.ByteBuffer;
 
 class DnsQuestionBuilder implements Builder<DnsQuestion> {
@@ -29,12 +26,6 @@ class DnsQuestionBuilder implements Builder<DnsQuestion> {
   }
 
   private void setQuestion(ByteBuffer label) {
-    // Question domain
     this.questionBuffer.put(label);
-    // Type
-    this.questionBuffer.putShort(A.value());
-    // Class
-    this.questionBuffer.putShort(IN.value());
-
   }
 }

@@ -43,8 +43,8 @@ class DnsQuestion implements BufferWrapper {
       if (nextByte == terminator) {
         sPos = ePos;
         ePos = (short) copyBuffer.position();
-        this.questions[qIndex++] = copyBuffer.duplicate().position(sPos).limit(ePos).slice();
         ePos += 4;
+        this.questions[qIndex++] = copyBuffer.duplicate().position(sPos).limit(ePos).slice();
         if (ePos <= copyBuffer.limit()) {
           copyBuffer.position(ePos);
         }
