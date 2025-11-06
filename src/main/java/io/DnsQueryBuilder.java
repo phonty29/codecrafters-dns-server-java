@@ -1,8 +1,5 @@
-package io2;
+package io;
 
-import io.Builder;
-import io.DnsHeader;
-import io.DnsQuestion;
 import java.nio.ByteBuffer;
 import java.util.Objects;
 
@@ -18,7 +15,12 @@ public class DnsQueryBuilder implements Builder<DnsQuery> {
     this.queryBuffer = ByteBuffer.wrap(bytes);
     this.header = new DnsHeader(queryBuffer.duplicate().position(0).limit(12).slice());
     this.question = new DnsQuestion(queryBuffer.duplicate().position(12).slice(), this.header.getQDCount());
-    System.out.println("DnsQueryBuilder question position: " + this.question.getBuffer().position());
+  }
+
+  DnsQueryBuilder(ByteBuffer buffer) {
+    this.queryBuffer = buffer.duplicate().position(0);
+    this.header = new DnsHeader(queryBuffer.duplicate().position(0).limit(12).slice());
+    this.question = new DnsQuestion(queryBuffer.duplicate().position(12).slice(), this.header.getQDCount());
   }
 
   @Override

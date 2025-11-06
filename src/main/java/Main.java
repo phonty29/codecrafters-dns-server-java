@@ -1,6 +1,6 @@
 import inet.DnsForwarder;
 import io.DnsHeaderBuilder;
-import io2.DnsQuery;
+import io.DnsQuery;
 import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
@@ -28,26 +28,23 @@ public class Main {
         serverSocket.receive(packet);
 
         DnsQuery query = DnsQuery.builder(packet.getData()).build();
-//        DnsForwarder forwarder = new DnsForwarder(forwardServer.split(":")[0], forwardServer.split(":")[1]);
-//        DnsResponse resp = forwarder.forward(query);
+        DnsForwarder forwarder = new DnsForwarder(forwardServer.split(":")[0], forwardServer.split(":")[1]);
+        DnsResponse forwardResponse = forwarder.forward(query);
 
-        byte[] response = new byte[512];
-//        if (query.getHeader().getFlags().getOpcode() != 0) {
-          response = DnsResponse
-              .builder()
-              .header(new DnsHeaderBuilder()
-                  .transactionId(query.getHeader().getPacketID())
-                  .flags(query.getHeader().getFlags(), true)
-                  .qdCount(query.getHeader().getQDCount())
-                  .anCount(query.getHeader().getQDCount())
-                  .nsCount((short) 0)
-                  .arCount((short) 0)
-                  .build())
-              .question(query.getQuestion().getDecompressedQuestions())
-              .answer(query.getQuestion().getDecompressedQuestions())
-              .build()
-              .getBytes();
-//        }
+        byte[] response = DnsResponse
+            .builder()
+            .header(new DnsHeaderBuilder()
+                .transactionId(query.getHeader().getPacketID())
+                .flags(query.getHeader().getFlags(), true)
+                .qdCount(query.getHeader().getQDCount())
+                .anCount(query.getHeader().getQDCount())
+                .nsCount((short) 0)
+                .arCount((short) 0)
+                .build())
+            .question(query.getQuestion().getDecompressedQuestions())
+            .answer(forwardResponse.getAnswer().getAnswers())
+            .build()
+            .getBytes();
 
         final DatagramPacket packetResponse = new DatagramPacket(response, response.length, packet.getSocketAddress());
         serverSocket.send(packetResponse);

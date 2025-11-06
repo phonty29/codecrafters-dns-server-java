@@ -5,17 +5,19 @@ import java.nio.ByteBuffer;
 
 class DnsAnswerBuilder implements Builder<DnsAnswer> {
   private final ByteBuffer answerBuffer;
+  private int answerCount;
 
   private final static int TTL = 60;
   private final static short RDLENGTH = 4;
 
-  DnsAnswerBuilder(int size) {
-    this.answerBuffer = ByteBuffer.allocate(size);
+  DnsAnswerBuilder() {
+    this.answerBuffer = ByteBuffer.allocate(512);
   }
 
-  DnsAnswerBuilder questions(ByteBuffer[] questions) {
-    for (var question : questions) {
-      this.setResourceRecord(question);
+  DnsAnswerBuilder answers(ByteBuffer[] answers) {
+    this.answerCount = answers.length;
+    for (var answer : answers) {
+      this.setResourceRecord(answer);
     }
     return this;
   }
@@ -23,17 +25,12 @@ class DnsAnswerBuilder implements Builder<DnsAnswer> {
   @Override
   public DnsAnswer build() {
     int cursor = this.answerBuffer.position();
-    return new DnsAnswer(this.answerBuffer.duplicate().position(0).limit(cursor).slice());
+    return new DnsAnswer(this.answerBuffer.duplicate().position(0).limit(cursor).slice(), this.answerCount);
   }
 
   private void setResourceRecord(ByteBuffer question) {
-    // Question
-    this.answerBuffer.put(question);
-    // TTL (Time-to-live)
-    this.answerBuffer.putInt(TTL);
-    // Length (RDLENGTH)
-    this.answerBuffer.putShort(RDLENGTH);
-    // Data (RDATA)
-    this.answerBuffer.put(Inet4Address.getLoopbackAddress().getAddress());
+    if (question != null) {
+      this.answerBuffer.put(question);
+    }
   }
 }

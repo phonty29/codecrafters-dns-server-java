@@ -1,7 +1,4 @@
-package io2;
-
-import io.DnsHeader;
-import io.DnsQuestion;
+package io;
 
 public interface IDnsMessage {
   DnsHeader getHeader();

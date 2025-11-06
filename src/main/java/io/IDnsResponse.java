@@ -1,6 +1,4 @@
-package io2;
-
-import io.DnsAnswer;
+package io;
 
 public interface IDnsResponse extends IDnsMessage {
   DnsAnswer getAnswer();

@@ -15,6 +15,7 @@ public class DnsQuestion implements BufferWrapper {
   private final Map<Integer, ByteBuffer> labelsMap = new HashMap<>();
   private ByteBuffer[] questions;
   private ByteBuffer[] decompressedQuestions;
+  private int limit;
 
   private final static byte terminator = 0;
 
@@ -68,10 +69,11 @@ public class DnsQuestion implements BufferWrapper {
         copyBuffer.position(currentPosition);
       }
     }
+    this.limit = copyBuffer.position();
   }
 
   public int limit() {
-    return this.questionBuffer.limit();
+    return this.limit;
   }
 
   private void initDecompressedQuestions() {

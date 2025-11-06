@@ -1,8 +1,5 @@
-package io2;
+package io;
 
-import io.BufferWrapper;
-import io.DnsHeader;
-import io.DnsQuestion;
 import java.nio.ByteBuffer;
 
 public class DnsQuery implements BufferWrapper, IDnsMessage {
@@ -18,6 +15,10 @@ public class DnsQuery implements BufferWrapper, IDnsMessage {
 
   public static DnsQueryBuilder builder(byte[] bytes) {
     return new DnsQueryBuilder(bytes);
+  }
+
+  public static DnsQueryBuilder builder(ByteBuffer buffer) {
+    return new DnsQueryBuilder(buffer);
   }
 
   @Override
@@ -40,5 +41,25 @@ public class DnsQuery implements BufferWrapper, IDnsMessage {
 
   public DnsQuestion getQuestion() {
     return this.question;
+  }
+
+  public ByteBuffer[] split() {
+    ByteBuffer[] queries = new ByteBuffer[this.header.getQDCount()];
+    int i = 0;
+    for (ByteBuffer question : this.question.getDecompressedQuestions()) {
+      ByteBuffer queryBuffer = ByteBuffer.allocate(512);
+      DnsHeader header = new DnsHeaderBuilder()
+          .transactionId(this.header.getPacketID())
+          .flags(this.header.getFlags(), false)
+          .qdCount((short) 1)
+          .anCount((short) 0)
+          .arCount((short) 0)
+          .nsCount((short) 0)
+          .build();
+      queryBuffer.put(header.getBuffer());
+      queryBuffer.put(question);
+      queries[i++] = queryBuffer.duplicate().position(0).slice();
+    }
+    return queries;
   }
 }

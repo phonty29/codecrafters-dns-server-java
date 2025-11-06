@@ -6,8 +6,8 @@ class DnsQuestionBuilder implements Builder<DnsQuestion> {
   private final ByteBuffer questionBuffer;
   private short qdCount = 0;
 
-  DnsQuestionBuilder(int size) {
-    this.questionBuffer = ByteBuffer.allocate(size);
+  DnsQuestionBuilder() {
+    this.questionBuffer = ByteBuffer.allocate(512);
   }
 
   DnsQuestionBuilder questions(ByteBuffer[] labels) {
