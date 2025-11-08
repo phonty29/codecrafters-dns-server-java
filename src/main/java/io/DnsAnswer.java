@@ -1,15 +1,13 @@
 package io;
 
-import static utils.ByteUtils.isPointer;
-
 import java.nio.ByteBuffer;
+import java.util.Arrays;
 
 public class DnsAnswer implements BufferWrapper {
+
   private final ByteBuffer answerBuffer;
   private final int answerCount;
   private ByteBuffer[] answers;
-  private final static int terminator = 0;
-  private int limit;
 
   DnsAnswer(ByteBuffer answerBuffer, int answerCount) {
     this.answerBuffer = answerBuffer.duplicate().position(0);
@@ -33,7 +31,9 @@ public class DnsAnswer implements BufferWrapper {
   }
 
   public ByteBuffer[] getAnswers() {
-    return this.answers;
+    return Arrays.stream(this.answers)
+        .map(buff -> buff.duplicate().position(0).limit(buff.limit()).slice())
+        .toArray(ByteBuffer[]::new);
   }
 
   public void initAnswers() {
@@ -43,22 +43,22 @@ public class DnsAnswer implements BufferWrapper {
 
     while (copyBuffer.hasRemaining() && qIndex < this.answerCount) {
       byte nextByte = copyBuffer.get();
-      if (nextByte == terminator) {
+      // If terminator
+      if (nextByte == 0x00) {
         sPos = ePos;
-
-        short type = copyBuffer.getShort();
-        short classCode = copyBuffer.getShort();
-        int ttl = copyBuffer.getInt();
+        // Get Type
+        copyBuffer.getShort();
+        // Get Class
+        copyBuffer.getShort();
+        // Get TTL
+        copyBuffer.getInt();
+        // Get RDLength
         short rdlen = copyBuffer.getShort();
-        var buf = copyBuffer.get(new byte[rdlen]);
+        // Get IP address by RDLength
+        copyBuffer.get(new byte[rdlen]);
         ePos = copyBuffer.position();
         this.answers[qIndex++] = copyBuffer.duplicate().position(sPos).limit(ePos).slice();
       }
     }
-    this.limit = ePos;
-  }
-
-  public int limit() {
-    return this.limit;
   }
 }

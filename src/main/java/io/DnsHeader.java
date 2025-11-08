@@ -3,14 +3,12 @@ package io;
 import java.nio.ByteBuffer;
 
 public class DnsHeader implements BufferWrapper {
+
   public final static int SIZE = 12;
   private final ByteBuffer headerBuffer;
 
   public DnsHeader(ByteBuffer headerBuffer) {
-    this.headerBuffer = headerBuffer.duplicate();
-    if (this.headerBuffer.remaining() != SIZE) {
-      throw new IllegalStateException("Invalid header size");
-    }
+    this.headerBuffer = headerBuffer.duplicate().position(0);
   }
 
   @Override
@@ -45,6 +43,7 @@ public class DnsHeader implements BufferWrapper {
   }
 
   public static class Flags {
+
     private short flags;
 
     Flags(short flags) {

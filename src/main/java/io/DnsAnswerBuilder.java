@@ -1,17 +1,14 @@
 package io;
 
-import java.net.Inet4Address;
 import java.nio.ByteBuffer;
 
 class DnsAnswerBuilder implements Builder<DnsAnswer> {
+
   private final ByteBuffer answerBuffer;
   private int answerCount;
 
-  private final static int TTL = 60;
-  private final static short RDLENGTH = 4;
-
   DnsAnswerBuilder() {
-    this.answerBuffer = ByteBuffer.allocate(512);
+    this.answerBuffer = ByteBuffer.allocate(IDnsMessage.PACKET_SIZE);
   }
 
   DnsAnswerBuilder answers(ByteBuffer[] answers) {
@@ -25,12 +22,11 @@ class DnsAnswerBuilder implements Builder<DnsAnswer> {
   @Override
   public DnsAnswer build() {
     int cursor = this.answerBuffer.position();
-    return new DnsAnswer(this.answerBuffer.duplicate().position(0).limit(cursor).slice(), this.answerCount);
+    return new DnsAnswer(this.answerBuffer.duplicate().position(0).limit(cursor).slice(),
+        this.answerCount);
   }
 
   private void setResourceRecord(ByteBuffer question) {
-    if (question != null) {
-      this.answerBuffer.put(question);
-    }
+    this.answerBuffer.put(question);
   }
 }

@@ -3,6 +3,7 @@ package io;
 import java.nio.ByteBuffer;
 
 public class DnsQuery implements BufferWrapper, IDnsMessage {
+
   private final ByteBuffer queryBuffer;
   private final DnsHeader header;
   private final DnsQuestion question;
@@ -15,10 +16,6 @@ public class DnsQuery implements BufferWrapper, IDnsMessage {
 
   public static DnsQueryBuilder builder(byte[] bytes) {
     return new DnsQueryBuilder(bytes);
-  }
-
-  public static DnsQueryBuilder builder(ByteBuffer buffer) {
-    return new DnsQueryBuilder(buffer);
   }
 
   @Override

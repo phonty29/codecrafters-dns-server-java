@@ -8,15 +8,13 @@ import java.net.DatagramSocket;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.nio.ByteBuffer;
+import java.util.Arrays;
+import java.util.Objects;
 
 public class DnsForwarder {
+
   private final InetAddress forwardHost;
   private final int forwardPort;
-
-  public DnsForwarder(InetAddress forwardHost, int forwardPort) {
-    this.forwardHost = forwardHost;
-    this.forwardPort = forwardPort;
-  }
 
   public DnsForwarder(String forwardHost, String forwardPort) throws UnknownHostException {
     try {
@@ -46,18 +44,16 @@ public class DnsForwarder {
         DatagramPacket replyPacket = new DatagramPacket(forwardResponse, forwardResponse.length);
         forwardSock.receive(replyPacket);
         DnsResponse response = DnsResponse.builder(replyPacket.getData()).build();
-        System.out.println("Response answers: " + response.getAnswer().getAnswers().length);
-        response.getAnswer().getAnswers();
-        for (var answer : response.getAnswer().getAnswers()) {
-          answers[i++] = answer;
+        for (ByteBuffer replyAnswer : response.getAnswer().getAnswers()) {
+          answers[i++] = replyAnswer;
         }
-
       }
+
       return DnsResponse
           .builder()
           .header(query.getHeader())
           .question(query.getQuestion().getDecompressedQuestions())
-          .answer(answers)
+          .answer(Arrays.stream(answers).filter(Objects::nonNull).toArray(ByteBuffer[]::new))
           .build();
     } catch (IOException e) {
       System.err.println(e.getMessage());

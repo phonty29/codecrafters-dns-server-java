@@ -4,23 +4,19 @@ import java.nio.ByteBuffer;
 import java.util.Objects;
 
 public class DnsQueryBuilder implements Builder<DnsQuery> {
+
   private final ByteBuffer queryBuffer;
   private final DnsHeader header;
   private final DnsQuestion question;
 
   DnsQueryBuilder(byte[] bytes) {
-    if (Objects.isNull(bytes) || bytes.length != 512) {
+    if (Objects.isNull(bytes) || bytes.length != IDnsMessage.PACKET_SIZE) {
       throw new IllegalArgumentException("Incorrect query size");
     }
     this.queryBuffer = ByteBuffer.wrap(bytes);
-    this.header = new DnsHeader(queryBuffer.duplicate().position(0).limit(12).slice());
-    this.question = new DnsQuestion(queryBuffer.duplicate().position(12).slice(), this.header.getQDCount());
-  }
-
-  DnsQueryBuilder(ByteBuffer buffer) {
-    this.queryBuffer = buffer.duplicate().position(0);
-    this.header = new DnsHeader(queryBuffer.duplicate().position(0).limit(12).slice());
-    this.question = new DnsQuestion(queryBuffer.duplicate().position(12).slice(), this.header.getQDCount());
+    this.header = new DnsHeader(queryBuffer.duplicate().position(0).limit(DnsHeader.SIZE).slice());
+    this.question = new DnsQuestion(queryBuffer.duplicate().position(DnsHeader.SIZE).slice(),
+        this.header.getQDCount());
   }
 
   @Override

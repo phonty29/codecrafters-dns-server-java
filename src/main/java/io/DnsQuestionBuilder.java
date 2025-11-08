@@ -3,11 +3,12 @@ package io;
 import java.nio.ByteBuffer;
 
 class DnsQuestionBuilder implements Builder<DnsQuestion> {
+
   private final ByteBuffer questionBuffer;
   private short qdCount = 0;
 
   DnsQuestionBuilder() {
-    this.questionBuffer = ByteBuffer.allocate(512);
+    this.questionBuffer = ByteBuffer.allocate(IDnsResponse.PACKET_SIZE);
   }
 
   DnsQuestionBuilder questions(ByteBuffer[] labels) {

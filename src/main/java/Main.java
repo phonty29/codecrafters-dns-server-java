@@ -1,14 +1,12 @@
 import inet.DnsForwarder;
 import io.DnsHeaderBuilder;
 import io.DnsQuery;
+import io.DnsResponse;
 import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 
-import io.DnsResponse;
-
 public class Main {
-  private final static String RESOLVER = "--resolver";
 
   public static void main(String[] args) {
     System.out.println("Logs from your program will appear here!");
@@ -28,7 +26,8 @@ public class Main {
         serverSocket.receive(packet);
 
         DnsQuery query = DnsQuery.builder(packet.getData()).build();
-        DnsForwarder forwarder = new DnsForwarder(forwardServer.split(":")[0], forwardServer.split(":")[1]);
+        String forwardHost = forwardServer.split(":")[0], forwardPort = forwardServer.split(":")[1];
+        DnsForwarder forwarder = new DnsForwarder(forwardHost, forwardPort);
         DnsResponse forwardResponse = forwarder.forward(query);
 
         byte[] response = DnsResponse
@@ -46,7 +45,8 @@ public class Main {
             .build()
             .getBytes();
 
-        final DatagramPacket packetResponse = new DatagramPacket(response, response.length, packet.getSocketAddress());
+        final DatagramPacket packetResponse = new DatagramPacket(response, response.length,
+            packet.getSocketAddress());
         serverSocket.send(packetResponse);
       }
     } catch (IOException e) {
