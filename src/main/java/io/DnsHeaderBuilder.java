@@ -6,14 +6,13 @@ import java.nio.ByteOrder;
 
 public class DnsHeaderBuilder implements Builder<DnsHeader> {
 
-  private final static int HEADER_SIZE = 12;
   private final static byte NO_ERROR = 0;
   private final static byte NOT_IMPLEMENTED = 4;
   private final ByteBuffer headerBuffer;
 
   public DnsHeaderBuilder() {
     this.headerBuffer = ByteBuffer
-        .allocate(HEADER_SIZE)
+        .allocate(DnsHeader.SIZE)
         .order(ByteOrder.BIG_ENDIAN);
   }
 
